@@ -1,238 +1,119 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-
 <meta charset="UTF-8">
 <title>Nexora AI</title>
-
 <style>
-
 body{
-font-family:Arial;
-background:linear-gradient(180deg,#0f2a5c,#3f6ed3);
-color:white;
-text-align:center;
-margin:0;
+  font-family:Arial, sans-serif;
+  margin:0;
+  background: linear-gradient(180deg,#0b1026,#1f3fff);
+  color:white;
+  text-align:center;
 }
-
 header{
-padding:20px;
+  padding:20px;
+  background:#0f1738;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
-
+header a{
+  color:white;
+  margin-left:15px;
+  text-decoration:none;
+  font-weight:bold;
+}
 .logo{
-font-size:28px;
-font-weight:bold;
+  font-size:28px;
+  font-weight:bold;
 }
-
 .hero{
-padding:60px 20px;
+  padding:80px 20px;
 }
-
 textarea{
-width:80%;
-height:120px;
-border-radius:10px;
-padding:10px;
-border:none;
+  width:60%;
+  height:120px;
+  border-radius:10px;
+  padding:10px;
+  margin-top:20px;
+  border:none;
+  font-size:16px;
 }
-
 button{
-background:#1f5cff;
-color:white;
-border:none;
-padding:12px 25px;
-margin-top:15px;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
+  background:#3f6cff;
+  color:white;
+  border:none;
+  padding:12px 30px;
+  border-radius:8px;
+  margin-top:15px;
+  cursor:pointer;
+  font-size:16px;
 }
-
-button:hover{
-background:#1847c7;
-}
-
 #result{
-white-space:pre-line;
-margin-top:30px;
-padding:20px;
+  white-space:pre-line;
+  margin-top:30px;
+  padding:20px;
+  text-align:left;
+  background:#121a40;
+  border-radius:10px;
 }
-
-.features{
-padding:60px 20px;
-background:#0b1e45;
+nav{
+  display:flex;
+  align-items:center;
 }
-
-.feature-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-}
-
-.card{
-background:#1c3f8b;
-padding:20px;
-border-radius:10px;
-}
-
-.pricing{
-padding:60px 20px;
-}
-
-.price-card{
-background:#1c3f8b;
-padding:25px;
-margin:20px;
-border-radius:10px;
-display:inline-block;
-width:250px;
-}
-
 </style>
-
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-
 <body>
 
 <header>
-
-<div class="logo">NEXORA AI</div>
-
+  <div class="logo">NEXORA AI</div>
+  <nav>
+    <a href="index.html">الرئيسية</a>
+    <a href="signup.html">تسجيل</a>
+    <a href="login.html">دخول</a>
+    <a href="dashboard.html">لوحة التحكم</a>
+  </nav>
 </header>
 
 <section class="hero">
+<h1>ابدأ شركتك بالذكاء الاصطناعي</h1>
+<p>اكتب فكرة مشروعك وسيقوم Nexora بإنشاء خطة كاملة</p>
 
-<h1>بناء شركتك بالذكاء الاصطناعي</h1>
-
-<p>اكتب فكرة مشروعك وسيقوم Nexora ببناء خطة شركة كاملة</p>
-
-<textarea id="idea" placeholder="اكتب فكرة مشروعك هنا"></textarea>
-
-<br>
-
-<button onclick="generatePlan()">إنشاء خطة المشروع</button>
+<textarea id="idea" placeholder="اكتب فكرة مشروعك هنا"></textarea><br>
+<button onclick="generatePlan()">إنشاء الخطة</button>
 
 <pre id="result"></pre>
-
-</section>
-
-<section class="features">
-
-<h2>ميزات Nexora</h2>
-
-<div class="feature-grid">
-
-<div class="card">
-<h3>AI Startup Builder</h3>
-<p>بناء شركة كاملة من فكرة واحدة</p>
-</div>
-
-<div class="card">
-<h3>AI Logo Generator</h3>
-<p>توليد شعار للشركة</p>
-</div>
-
-<div class="card">
-<h3>Pitch Deck Generator</h3>
-<p>إنشاء عرض استثماري</p>
-</div>
-
-<div class="card">
-<h3>Build Website with AI</h3>
-<p>إنشاء موقع تلقائي</p>
-</div>
-
-<div class="card">
-<h3>AI Marketing Plan</h3>
-<p>خطة تسويق كاملة</p>
-</div>
-
-</div>
-
-</section>
-
-<section class="pricing">
-
-<h2>الاشتراكات</h2>
-
-<div class="price-card">
-<h3>PRO</h3>
-<h1>$12</h1>
-<p>شهريًا</p>
-<p>ادفع 11 شهر واحصل على الشهر 12 مجانًا</p>
-</div>
-
-<div class="price-card">
-<h3>ULTRA</h3>
-<h1>$31</h1>
-<p>شهريًا</p>
-<p>ادفع 11 شهر واحصل على الشهر 12 مجانًا</p>
-</div>
-
 </section>
 
 <script>
+async function generatePlan(){
+  let idea=document.getElementById("idea").value.trim();
+  if(!idea){alert("اكتب فكرة مشروعك أولاً");return;}
 
-function generatePlan(){
+  document.getElementById("result").innerText="...جاري توليد الخطة بالذكاء الاصطناعي";
 
-let idea=document.getElementById("idea").value;
+  try{
+    const response=await axios.post("https://api.openai.com/v1/chat/completions",{
+      model:"gpt-4",
+      messages:[{role:"user", content:`اعطني خطة مشروع شاملة وفعلية لفكرة: ${idea}. اجعلها تشمل اسم المشروع، الجمهور المستهدف، نموذج الربح، خطة بناء المشروع، خطة التسويق، أول 100 مستخدم، وخطة التوسع.`}],
+      max_tokens:1200
+    },{
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer YOUR_OPENAI_API_KEY"
+      }
+    });
 
-if(idea.trim()===""){
-alert("اكتب فكرة مشروعك أولاً");
-return;
+    let plan=response.data.choices[0].message.content;
+    document.getElementById("result").innerText=plan;
+
+  }catch(err){
+    document.getElementById("result").innerText="حدث خطأ في توليد الخطة.";
+    console.error(err);
+  }
 }
-
-let names=[
-"NexAI",
-"FutureMind",
-"NovaLabs",
-"SmartFlow",
-"VisionTech"
-];
-
-let name=names[Math.floor(Math.random()*names.length)];
-
-let plan=
-
-"🚀 اسم المشروع:\n"+name+
-
-"\n\n💡 فكرة المشروع:\n"+idea+
-
-"\n\n🎯 الجمهور المستهدف:\n"+
-"- رواد الأعمال\n"+
-"- الشركات الصغيرة\n"+
-"- الطلاب\n"+
-"- صناع المحتوى"+
-
-"\n\n💰 نموذج الربح:\n"+
-"- اشتراك شهري 12$\n"+
-"- خطة Ultra 31$\n"+
-"- خدمات إضافية للشركات"+
-
-"\n\n🛠 خطة بناء المشروع:\n"+
-"1- إنشاء MVP بسيط\n"+
-"2- إطلاق الموقع\n"+
-"3- تحسين المنتج حسب المستخدمين"+
-
-"\n\n📢 خطة التسويق:\n"+
-"- نشر المشروع في تويتر\n"+
-"- فيديوهات تيك توك\n"+
-"- مجتمعات Reddit\n"+
-"- مجتمعات الشركات الناشئة"+
-
-"\n\n👥 الحصول على أول 100 مستخدم:\n"+
-"- مشاركة المشروع مع الأصدقاء\n"+
-"- نشره في المجتمعات التقنية\n"+
-"- تقديم تجربة مجانية"+
-
-"\n\n🌍 التوسع:\n"+
-"- إضافة تطبيق موبايل\n"+
-"- إضافة ميزات AI جديدة\n"+
-"- التوسع عالميًا";
-
-document.getElementById("result").innerText=plan;
-
-}
-
 </script>
 
 </body>
