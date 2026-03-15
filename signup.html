@@ -1,46 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>Nexora Sign Up</title>
-<style>
-body {
-    background: linear-gradient(to bottom, #0b3d91, #ffffff);
-    color: #0b0f2b;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 50px;
-}
-
-input, textarea {
-    padding: 12px;
-    margin: 10px;
-    width: 250px;
-    border-radius: 6px;
-    border: 1px solid #0b3d91;
-    background-color: #e6e6ff;
-    color: #0b0f2b;
-}
-
-button {
-    background-color: #0b3d91;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    cursor: pointer;
-    border-radius: 6px;
-}
-</style>
+<title>تسجيل حساب - Nexora</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 </head>
 <body>
+<h1>تسجيل حساب جديد</h1>
+<input id="email" type="email" placeholder="البريد الإلكتروني"><br>
+<input id="password" type="password" placeholder="كلمة المرور"><br>
+<button onclick="signup()">تسجيل</button>
 
-<h1>Create Your Nexora Account</h1>
-
-<input type="text" placeholder="Name"><br>
-<input type="email" placeholder="Email"><br>
-<input type="password" placeholder="Password"><br>
-
-<button onclick="window.location.href='builder.html'">Create Account</button>
-
+<script>
+const firebaseConfig={apiKey:"YOUR_FIREBASE_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",databaseURL:"https://YOUR_PROJECT.firebaseio.com",projectId:"YOUR_PROJECT"};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+function signup(){
+  let email=document.getElementById("email").value;
+  let password=document.getElementById("password").value;
+  auth.createUserWithEmailAndPassword(email,password)
+  .then(user=>alert("تم التسجيل!"))
+  .catch(err=>alert(err.message));
+}
+</script>
 </body>
-</html>
+</html
