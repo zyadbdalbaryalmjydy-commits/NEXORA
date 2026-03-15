@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Nexora AI Builder</title>
+
+<style>
+
+body{
+background:#0b0f2b;
+color:white;
+font-family:Arial;
+text-align:center;
+padding:50px;
+}
+
+textarea{
+width:80%;
+height:150px;
+padding:10px;
+margin:20px;
+}
+
+button{
+padding:12px 25px;
+background:#4f6cff;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Nexora AI Startup Builder</h1>
+
+<p>Write your startup idea</p>
+
+<textarea id="idea"></textarea>
+
+<br>
+
+<button onclick="generate()">Generate Plan</button>
+
+<p id="result"></p>
+
+<script>
+
+function generate(){
+
+document.getElementById("result").innerHTML =
+"Startup Plan: Build an AI product, launch MVP, scale globally, monetize with subscriptions.";
+
+}
+
+</script>
+
+</body>
+</html>
