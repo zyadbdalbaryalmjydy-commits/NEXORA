@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
+
 <meta charset="UTF-8">
 <title>Nexora AI</title>
 
@@ -104,13 +105,13 @@ width:250px;
 
 <p>اكتب فكرة مشروعك وسيقوم Nexora ببناء خطة شركة كاملة</p>
 
-<textarea id="idea" placeholder="اكتب فكرة مشروعك..."></textarea>
+<textarea id="idea" placeholder="اكتب فكرة مشروعك هنا"></textarea>
 
 <br>
 
-<button onclick="generatePlan()">إنشاء خطة</button>
+<button onclick="generatePlan()">إنشاء خطة المشروع</button>
 
-<div id="result"></div>
+<pre id="result"></pre>
 
 </section>
 
@@ -127,12 +128,12 @@ width:250px;
 
 <div class="card">
 <h3>AI Logo Generator</h3>
-<p>إنشاء شعار تلقائي</p>
+<p>توليد شعار للشركة</p>
 </div>
 
 <div class="card">
 <h3>Pitch Deck Generator</h3>
-<p>عرض استثماري للمستثمرين</p>
+<p>إنشاء عرض استثماري</p>
 </div>
 
 <div class="card">
@@ -175,7 +176,18 @@ function generatePlan(){
 
 let idea=document.getElementById("idea").value;
 
-let names=["NexAI","SmartFlow","FutureMind","NovaLabs"];
+if(idea.trim()===""){
+alert("اكتب فكرة مشروعك أولاً");
+return;
+}
+
+let names=[
+"NexAI",
+"FutureMind",
+"NovaLabs",
+"SmartFlow",
+"VisionTech"
+];
 
 let name=names[Math.floor(Math.random()*names.length)];
 
@@ -183,8 +195,45 @@ let plan=
 
 "🚀 اسم المشروع:\n"+name+
 
-"\n\n💡 الفكرة:\n"+idea+
+"\n\n💡 فكرة المشروع:\n"+idea+
 
-"\n\n🎯 الجمهور:\nرواد الأعمال والشركات الصغيرة"+
+"\n\n🎯 الجمهور المستهدف:\n"+
+"- رواد الأعمال\n"+
+"- الشركات الصغيرة\n"+
+"- الطلاب\n"+
+"- صناع المحتوى"+
 
-"\n
+"\n\n💰 نموذج الربح:\n"+
+"- اشتراك شهري 12$\n"+
+"- خطة Ultra 31$\n"+
+"- خدمات إضافية للشركات"+
+
+"\n\n🛠 خطة بناء المشروع:\n"+
+"1- إنشاء MVP بسيط\n"+
+"2- إطلاق الموقع\n"+
+"3- تحسين المنتج حسب المستخدمين"+
+
+"\n\n📢 خطة التسويق:\n"+
+"- نشر المشروع في تويتر\n"+
+"- فيديوهات تيك توك\n"+
+"- مجتمعات Reddit\n"+
+"- مجتمعات الشركات الناشئة"+
+
+"\n\n👥 الحصول على أول 100 مستخدم:\n"+
+"- مشاركة المشروع مع الأصدقاء\n"+
+"- نشره في المجتمعات التقنية\n"+
+"- تقديم تجربة مجانية"+
+
+"\n\n🌍 التوسع:\n"+
+"- إضافة تطبيق موبايل\n"+
+"- إضافة ميزات AI جديدة\n"+
+"- التوسع عالميًا";
+
+document.getElementById("result").innerText=plan;
+
+}
+
+</script>
+
+</body>
+</html>
