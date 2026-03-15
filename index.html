@@ -1,58 +1,190 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>Nexora</title>
+<title>Nexora AI</title>
+
 <style>
-body {
-    background: linear-gradient(to bottom, #0b3d91, #ffffff); /* من أزرق داكن للأبيض */
-    color: #0b0f2b; /* نص داكن فوق الأبيض */
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+
+body{
+font-family:Arial;
+background:linear-gradient(180deg,#0f2a5c,#3f6ed3);
+color:white;
+text-align:center;
+margin:0;
 }
 
-h1, h2, h3, p, label {
-    color: #0b0f2b;
+header{
+padding:20px;
 }
 
-button {
-    background-color: #0b3d91;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    cursor: pointer;
-    border-radius: 6px;
-    font-size: 16px;
+.logo{
+font-size:28px;
+font-weight:bold;
 }
 
-input {
-    padding: 12px;
-    margin: 10px;
-    width: 250px;
-    border-radius: 6px;
-    border: 1px solid #0b3d91;
-    background-color: #e6e6ff;
-    color: #0b0f2b;
+.hero{
+padding:60px 20px;
 }
+
+textarea{
+width:80%;
+height:120px;
+border-radius:10px;
+padding:10px;
+border:none;
+}
+
+button{
+background:#1f5cff;
+color:white;
+border:none;
+padding:12px 25px;
+margin-top:15px;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1847c7;
+}
+
+#result{
+white-space:pre-line;
+margin-top:30px;
+padding:20px;
+}
+
+.features{
+padding:60px 20px;
+background:#0b1e45;
+}
+
+.feature-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+}
+
+.card{
+background:#1c3f8b;
+padding:20px;
+border-radius:10px;
+}
+
+.pricing{
+padding:60px 20px;
+}
+
+.price-card{
+background:#1c3f8b;
+padding:25px;
+margin:20px;
+border-radius:10px;
+display:inline-block;
+width:250px;
+}
+
 </style>
+
 </head>
+
 <body>
 
-<h1>Welcome to Nexora</h1>
-<p>Build Your Startup With AI</p>
+<header>
 
-<button onclick="window.location.href='signup.html'">Start Building</button>
+<div class="logo">NEXORA AI</div>
 
-<br><br>
-<input placeholder="Enter your email for updates">
-<button>Join Waitlist</button>
+</header>
 
-<h2>Pricing</h2>
-<p>Starter: Free</p>
-<p>Pro: $12 / month</p>
-<p>Founder: $29 / month</p>
+<section class="hero">
 
-</body>
-</html>
+<h1>بناء شركتك بالذكاء الاصطناعي</h1>
+
+<p>اكتب فكرة مشروعك وسيقوم Nexora ببناء خطة شركة كاملة</p>
+
+<textarea id="idea" placeholder="اكتب فكرة مشروعك..."></textarea>
+
+<br>
+
+<button onclick="generatePlan()">إنشاء خطة</button>
+
+<div id="result"></div>
+
+</section>
+
+<section class="features">
+
+<h2>ميزات Nexora</h2>
+
+<div class="feature-grid">
+
+<div class="card">
+<h3>AI Startup Builder</h3>
+<p>بناء شركة كاملة من فكرة واحدة</p>
+</div>
+
+<div class="card">
+<h3>AI Logo Generator</h3>
+<p>إنشاء شعار تلقائي</p>
+</div>
+
+<div class="card">
+<h3>Pitch Deck Generator</h3>
+<p>عرض استثماري للمستثمرين</p>
+</div>
+
+<div class="card">
+<h3>Build Website with AI</h3>
+<p>إنشاء موقع تلقائي</p>
+</div>
+
+<div class="card">
+<h3>AI Marketing Plan</h3>
+<p>خطة تسويق كاملة</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="pricing">
+
+<h2>الاشتراكات</h2>
+
+<div class="price-card">
+<h3>PRO</h3>
+<h1>$12</h1>
+<p>شهريًا</p>
+<p>ادفع 11 شهر واحصل على الشهر 12 مجانًا</p>
+</div>
+
+<div class="price-card">
+<h3>ULTRA</h3>
+<h1>$31</h1>
+<p>شهريًا</p>
+<p>ادفع 11 شهر واحصل على الشهر 12 مجانًا</p>
+</div>
+
+</section>
+
+<script>
+
+function generatePlan(){
+
+let idea=document.getElementById("idea").value;
+
+let names=["NexAI","SmartFlow","FutureMind","NovaLabs"];
+
+let name=names[Math.floor(Math.random()*names.length)];
+
+let plan=
+
+"🚀 اسم المشروع:\n"+name+
+
+"\n\n💡 الفكرة:\n"+idea+
+
+"\n\n🎯 الجمهور:\nرواد الأعمال والشركات الصغيرة"+
+
+"\n
