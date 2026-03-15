@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>لوحة التحكم - Nexora</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+<h1>لوحة التحكم الخاصة بك</h1>
+<button onclick="logout()">تسجيل خروج</button>
+<div id="projects"></div>
+
+<script>
+const firebaseConfig={apiKey:"YOUR_FIREBASE_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",databaseURL:"https://YOUR_PROJECT.firebaseio.com",projectId:"YOUR_PROJECT"};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+const db=firebase.database();
+
+auth.onAuthStateChanged(user=>{
+  if(user){
+    db.ref('projects/'+user.uid).once('value',snap=>{
+      let html="";
+      snap.forEach(child=>{
+        html+=`<p>${child.val().idea}</p>`;
+      });
+      document.getElementById("projects").innerHTML=html;
+    });
+  }else{window.location.href="signup.html";}
+});
+
+function logout(){auth.signOut();}
+</script>
+</body>
+</html>
