@@ -1,204 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Nexora AI</title>
-
+<title>Nexora</title>
 <style>
-
-body{
-margin:0;
-font-family:Arial;
-background:#0f172a;
-color:white;
+body {
+    background: linear-gradient(to bottom, #0b3d91, #ffffff); /* من أزرق داكن للأبيض */
+    color: #0b0f2b; /* نص داكن فوق الأبيض */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
 }
 
-header{
-display:flex;
-justify-content:space-between;
-padding:20px 40px;
-background:#020617;
+h1, h2, h3, p, label {
+    color: #0b0f2b;
 }
 
-.logo{
-font-size:24px;
-font-weight:bold;
+button {
+    background-color: #0b3d91;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
 }
 
-nav a{
-margin-left:20px;
-color:white;
-text-decoration:none;
+input {
+    padding: 12px;
+    margin: 10px;
+    width: 250px;
+    border-radius: 6px;
+    border: 1px solid #0b3d91;
+    background-color: #e6e6ff;
+    color: #0b0f2b;
 }
-
-.hero{
-text-align:center;
-padding:120px 20px;
-}
-
-.hero h1{
-font-size:60px;
-margin-bottom:20px;
-}
-
-.hero p{
-font-size:22px;
-color:#cbd5e1;
-}
-
-button{
-margin-top:30px;
-padding:15px 35px;
-font-size:18px;
-background:#3b82f6;
-border:none;
-border-radius:8px;
-color:white;
-cursor:pointer;
-}
-
-.features{
-padding:80px 20px;
-text-align:center;
-}
-
-.features h2{
-font-size:40px;
-margin-bottom:40px;
-}
-
-.feature-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:30px;
-}
-
-.card{
-background:#1e293b;
-padding:30px;
-border-radius:10px;
-}
-
-.pricing{
-padding:80px 20px;
-text-align:center;
-}
-
-.price-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:30px;
-}
-
-.price-card{
-background:#1e293b;
-padding:40px;
-border-radius:10px;
-}
-
-footer{
-text-align:center;
-padding:40px;
-background:#020617;
-margin-top:80px;
-}
-
 </style>
-
 </head>
-
 <body>
 
-<header>
-
-<div class="logo">NEXORA</div>
-
-<nav>
-<a href="#">Home</a>
-<a href="#">Features</a>
-<a href="#">Pricing</a>
-<a href="#">Contact</a>
-</nav>
-
-</header>
-
-<section class="hero">
-
-<h1>Build Your Startup With AI</h1>
-
-<p>Nexora helps entrepreneurs create, launch, and grow businesses using artificial intelligence.</p>
+<h1>Welcome to Nexora</h1>
+<p>Build Your Startup With AI</p>
 
 <button onclick="window.location.href='signup.html'">Start Building</button>
 
-</section>
-
-<section class="features">
-
-<h2>Features</h2>
-
-<div class="feature-grid">
-
-<div class="card">
-<h3>AI Startup Ideas</h3>
-<p>Generate powerful business ideas instantly.</p>
-</div>
-
-<div class="card">
-<h3>Business Plans</h3>
-<p>Create full startup plans with AI.</p>
-</div>
-
-<div class="card">
-<h3>Market Analysis</h3>
-<p>Analyze markets and competitors automatically.</p>
-</div>
-
-<div class="card">
-<h3>Launch Tools</h3>
-<p>Tools to build and launch your startup.</p>
-</div>
-
-</div>
-
-</section>
-
-<section class="pricing">
+<br><br>
+<input placeholder="Enter your email for updates">
+<button>Join Waitlist</button>
 
 <h2>Pricing</h2>
-
-<div class="price-grid">
-
-<div class="price-card">
-<h3>Pro</h3>
-<h1>$11</h1>
-<p>per month</p>
-<p>12th month free</p>
-</div>
-
-<div class="price-card">
-<h3>Ultra</h3>
-<h1>$31</h1>
-<p>per month</p>
-<p>12th month free</p>
-</div>
-
-<div class="price-card">
-<h3>Ultra Plus</h3>
-<h1>$49</h1>
-<p>per month</p>
-<p>12th month free</p>
-</div>
-
-</div>
-
-</section>
-
-<footer>
-
-<p>© 2026 Nexora AI</p>
-
-</footer>
+<p>Starter: Free</p>
+<p>Pro: $12 / month</p>
+<p>Founder: $29 / month</p>
 
 </body>
 </html>
-<!-- update -->
