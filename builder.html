@@ -1,60 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Nexora AI Builder</title>
-
 <style>
-
-body{
-background:#0b0f2b;
-color:white;
-font-family:Arial;
-text-align:center;
-padding:50px;
+body {
+    background: linear-gradient(to bottom, #0b3d91, #ffffff);
+    color: #0b0f2b;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 50px;
 }
 
-textarea{
-width:80%;
-height:150px;
-padding:10px;
-margin:20px;
+textarea {
+    width: 80%;
+    height: 150px;
+    padding: 10px;
+    margin: 20px;
+    border-radius: 6px;
+    border: 1px solid #0b3d91;
+    background-color: #e6e6ff;
+    color: #0b0f2b;
 }
 
-button{
-padding:12px 25px;
-background:#4f6cff;
-color:white;
-border:none;
-cursor:pointer;
+button {
+    background-color: #0b3d91;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    cursor: pointer;
+    border-radius: 6px;
 }
-
 </style>
-
 </head>
-
 <body>
 
 <h1>Nexora AI Startup Builder</h1>
 
 <p>Write your startup idea</p>
 
-<textarea id="idea"></textarea>
-
+<textarea id="idea" placeholder="Example: AI app for learning languages"></textarea>
 <br>
-
 <button onclick="generate()">Generate Plan</button>
 
 <p id="result"></p>
 
 <script>
-
-function generate(){
-
-document.getElementById("result").innerHTML =
-"Startup Plan: Build an AI product, launch MVP, scale globally, monetize with subscriptions.";
-
+function generate() {
+    let idea = document.getElementById("idea").value;
+    document.getElementById("result").innerHTML =
+        "AI Plan for: " + idea +
+        "<br><br>Step 1: Build MVP" +
+        "<br>Step 2: Launch online" +
+        "<br>Step 3: Get first users" +
+        "<br>Step 4: Monetize with subscriptions";
 }
-
 </script>
 
 </body>
