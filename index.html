@@ -83,6 +83,10 @@ button{
   margin:30px;
   border-radius:10px;
   white-space:pre-line;
+  text-align:left;
+}
+#logoContainer{
+  margin-top:20px;
 }
 .lang-switch{
   display:flex;
@@ -120,6 +124,7 @@ button{
 <br>
 <button id="generateBtn" onclick="generatePlan()">Generate Business Plan</button>
 
+<div id="logoContainer"></div>
 <div id="result" class="result"></div>
 </section>
 
@@ -129,6 +134,8 @@ button{
 <div class="feature-box" id="f2">Startup Name Generator</div>
 <div class="feature-box" id="f3">AI Marketing Strategy</div>
 <div class="feature-box" id="f4">Investor Pitch Deck</div>
+<div class="feature-box" id="f5">AI Logo Generator</div>
+<div class="feature-box" id="f6">Startup Share Link</div>
 </section>
 
 <section class="pricing">
@@ -158,6 +165,8 @@ f1:"AI Business Plan Generator",
 f2:"Startup Name Generator",
 f3:"AI Marketing Strategy",
 f4:"Investor Pitch Deck",
+f5:"AI Logo Generator",
+f6:"Startup Share Link",
 pricingTitle:"Pricing",
 proTitle:"Pro",
 ultraTitle:"Ultra"
@@ -171,6 +180,8 @@ f1:"مولد خطة عمل بالذكاء الاصطناعي",
 f2:"مولد أسماء الشركات",
 f3:"خطة تسويق بالذكاء الاصطناعي",
 f4:"عرض للمستثمرين",
+f5:"مولد شعار بالذكاء الاصطناعي",
+f6:"رابط مشاركة المشروع",
 pricingTitle:"الأسعار",
 proTitle:"برو",
 ultraTitle:"ألترا"
@@ -186,26 +197,54 @@ function setLang(lang){
   document.getElementById("f2").innerText = translations[lang].f2;
   document.getElementById("f3").innerText = translations[lang].f3;
   document.getElementById("f4").innerText = translations[lang].f4;
+  document.getElementById("f5").innerText = translations[lang].f5;
+  document.getElementById("f6").innerText = translations[lang].f6;
   document.getElementById("pricingTitle").innerText = translations[lang].pricingTitle;
   document.getElementById("proTitle").innerText = translations[lang].proTitle;
   document.getElementById("ultraTitle").innerText = translations[lang].ultraTitle;
 }
 
 function generatePlan(){
-  let idea=document.getElementById("idea").value;
-  if(!idea){
-    alert("Write your idea first / اكتب فكرتك أولاً");
-    return;
-  }
-  let plan=
-  "Startup Name: AI Generated Company\n\n"+
-  "Idea:\n"+idea+"\n\n"+
-  "Target Audience:\nOnline users and businesses\n\n"+
-  "Business Model:\nSubscription and digital services\n\n"+
-  "Marketing Strategy:\nSocial media + AI marketing\n\n"+
-  "First 100 Users Strategy:\nLaunch on social media platforms\n\n"+
-  "Expansion Plan:\nScale globally using AI tools";
-  document.getElementById("result").innerText=plan;
+
+let idea = document.getElementById("idea").value;
+if(!idea){
+  alert("Write your idea first / اكتب الفكرة أولاً");
+  return;
+}
+
+// توليد اسم الشركة
+let startupName = "Nexora " + idea.split(" ")[0];
+
+// تقييم الفكرة
+let score = Math.floor(Math.random()*30)+70;
+
+// توليد رابط مشاركة
+let shareLink =
+"https://nexora.vercel.app/startup/" +
+idea.replace(/\s+/g,'-').toLowerCase();
+
+// توليد شعار بسيط (SVG) بناء على أول حرف من اسم الشركة
+let firstChar = startupName.charAt(0).toUpperCase();
+let logoSVG = `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="48" fill="#4c6fff"/>
+  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
+        font-size="50" fill="white" font-family="Arial">${firstChar}</text>
+</svg>`;
+
+// عرض الشعار في الصفحة
+document.getElementById("logoContainer").innerHTML = logoSVG;
+
+// توليد الخطة
+let plan =
+"🚀 Startup Name:\n"+startupName+
+"\n\n💡 Idea:\n"+idea+
+"\n\n🎯 Target Audience:\nOnline users and businesses"+
+"\n\n💰 Business Model:\nSubscription + digital services"+
+"\n\n📢 Marketing Plan:\nTikTok videos + Instagram ads"+
+"\n\n📊 Startup Score:\n"+score+"/100"+
+"\n\n🔗 Share Your Startup:\n"+shareLink;
+
+document.getElementById("result").innerText = plan;
 }
 </script>
 
