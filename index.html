@@ -1,118 +1,211 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nexora AI</title>
 <style>
 body{
-  font-family:Arial, sans-serif;
+  font-family: Arial, sans-serif;
   margin:0;
-  background: linear-gradient(180deg,#0b1026,#1f3fff);
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   color:white;
   text-align:center;
 }
 header{
-  padding:20px;
-  background:#0f1738;
   display:flex;
   justify-content:space-between;
   align-items:center;
-}
-header a{
-  color:white;
-  margin-left:15px;
-  text-decoration:none;
-  font-weight:bold;
+  padding:20px;
+  background:#0c1425;
 }
 .logo{
   font-size:28px;
   font-weight:bold;
 }
+nav a{
+  color:white;
+  margin:10px;
+  text-decoration:none;
+}
 .hero{
   padding:80px 20px;
+}
+.hero h1{
+  font-size:48px;
 }
 textarea{
   width:60%;
   height:120px;
   border-radius:10px;
-  padding:10px;
-  margin-top:20px;
   border:none;
+  padding:10px;
   font-size:16px;
 }
 button{
-  background:#3f6cff;
+  background:#4c6fff;
   color:white;
+  padding:14px 30px;
   border:none;
-  padding:12px 30px;
   border-radius:8px;
-  margin-top:15px;
+  font-size:18px;
   cursor:pointer;
-  font-size:16px;
+  margin-top:20px;
 }
-#result{
-  white-space:pre-line;
-  margin-top:30px;
-  padding:20px;
-  text-align:left;
-  background:#121a40;
+.features{
+  padding:60px 20px;
+  background:#111a30;
+}
+.feature-box{
+  margin:20px;
+}
+.pricing{
+  padding:60px;
+}
+.plan{
+  background:#1c2541;
+  padding:30px;
   border-radius:10px;
+  display:inline-block;
+  margin:20px;
+  width:250px;
 }
-nav{
+.plan h2{
+  font-size:28px;
+}
+.price{
+  font-size:32px;
+  margin:10px;
+}
+.result{
+  background:#111a30;
+  padding:20px;
+  margin:30px;
+  border-radius:10px;
+  white-space:pre-line;
+}
+.lang-switch{
   display:flex;
-  align-items:center;
+  gap:10px;
+}
+.lang-switch button{
+  padding:6px 12px;
+  font-size:14px;
+  border-radius:5px;
+  border:none;
+  cursor:pointer;
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
 
 <header>
-  <div class="logo">NEXORA AI</div>
+  <div class="logo">NEXORA</div>
   <nav>
-    <a href="index.html">الرئيسية</a>
-    <a href="signup.html">تسجيل</a>
-    <a href="login.html">دخول</a>
-    <a href="dashboard.html">لوحة التحكم</a>
+    <a href="#">Home</a>
+    <a href="#">Features</a>
+    <a href="#">Pricing</a>
   </nav>
+  <div class="lang-switch">
+    <button onclick="setLang('en')">EN</button>
+    <button onclick="setLang('ar')">AR</button>
+  </div>
 </header>
 
 <section class="hero">
-<h1>ابدأ شركتك بالذكاء الاصطناعي</h1>
-<p>اكتب فكرة مشروعك وسيقوم Nexora بإنشاء خطة كاملة</p>
+<h1 id="title">Build Your Startup With AI</h1>
+<p id="subtitle">Write your startup idea and Nexora will generate a full business plan.</p>
 
-<textarea id="idea" placeholder="اكتب فكرة مشروعك هنا"></textarea><br>
-<button onclick="generatePlan()">إنشاء الخطة</button>
+<textarea id="idea" placeholder="Write your startup idea here"></textarea>
+<br>
+<button id="generateBtn" onclick="generatePlan()">Generate Business Plan</button>
 
-<pre id="result"></pre>
+<div id="result" class="result"></div>
+</section>
+
+<section class="features">
+<h2 id="featuresTitle">Features</h2>
+<div class="feature-box" id="f1">AI Business Plan Generator</div>
+<div class="feature-box" id="f2">Startup Name Generator</div>
+<div class="feature-box" id="f3">AI Marketing Strategy</div>
+<div class="feature-box" id="f4">Investor Pitch Deck</div>
+</section>
+
+<section class="pricing">
+<h2 id="pricingTitle">Pricing</h2>
+
+<div class="plan">
+<h2 id="proTitle">Pro</h2>
+<div class="price">$12/month</div>
+<p>Pay 11 months, get 12th month free</p>
+</div>
+
+<div class="plan">
+<h2 id="ultraTitle">Ultra</h2>
+<div class="price">$31/month</div>
+<p>Pay 11 months, get 12th month free</p>
+</div>
 </section>
 
 <script>
-async function generatePlan(){
-  let idea=document.getElementById("idea").value.trim();
-  if(!idea){alert("اكتب فكرة مشروعك أولاً");return;}
+const translations = {
+en:{
+title:"Build Your Startup With AI",
+subtitle:"Write your startup idea and Nexora will generate a full business plan.",
+button:"Generate Business Plan",
+featuresTitle:"Features",
+f1:"AI Business Plan Generator",
+f2:"Startup Name Generator",
+f3:"AI Marketing Strategy",
+f4:"Investor Pitch Deck",
+pricingTitle:"Pricing",
+proTitle:"Pro",
+ultraTitle:"Ultra"
+},
+ar:{
+title:"ابنِ شركتك باستخدام الذكاء الاصطناعي",
+subtitle:"اكتب فكرة مشروعك وسينشئ لك Nexora خطة عمل كاملة.",
+button:"إنشاء خطة مشروع",
+featuresTitle:"الميزات",
+f1:"مولد خطة عمل بالذكاء الاصطناعي",
+f2:"مولد أسماء الشركات",
+f3:"خطة تسويق بالذكاء الاصطناعي",
+f4:"عرض للمستثمرين",
+pricingTitle:"الأسعار",
+proTitle:"برو",
+ultraTitle:"ألترا"
+}
+};
 
-  document.getElementById("result").innerText="...جاري توليد الخطة بالذكاء الاصطناعي";
+function setLang(lang){
+  document.getElementById("title").innerText = translations[lang].title;
+  document.getElementById("subtitle").innerText = translations[lang].subtitle;
+  document.getElementById("generateBtn").innerText = translations[lang].button;
+  document.getElementById("featuresTitle").innerText = translations[lang].featuresTitle;
+  document.getElementById("f1").innerText = translations[lang].f1;
+  document.getElementById("f2").innerText = translations[lang].f2;
+  document.getElementById("f3").innerText = translations[lang].f3;
+  document.getElementById("f4").innerText = translations[lang].f4;
+  document.getElementById("pricingTitle").innerText = translations[lang].pricingTitle;
+  document.getElementById("proTitle").innerText = translations[lang].proTitle;
+  document.getElementById("ultraTitle").innerText = translations[lang].ultraTitle;
+}
 
-  try{
-    const response=await axios.post("https://api.openai.com/v1/chat/completions",{
-      model:"gpt-4",
-      messages:[{role:"user", content:`اعطني خطة مشروع شاملة وفعلية لفكرة: ${idea}. اجعلها تشمل اسم المشروع، الجمهور المستهدف، نموذج الربح، خطة بناء المشروع، خطة التسويق، أول 100 مستخدم، وخطة التوسع.`}],
-      max_tokens:1200
-    },{
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":"Bearer YOUR_OPENAI_API_KEY"
-      }
-    });
-
-    let plan=response.data.choices[0].message.content;
-    document.getElementById("result").innerText=plan;
-
-  }catch(err){
-    document.getElementById("result").innerText="حدث خطأ في توليد الخطة.";
-    console.error(err);
+function generatePlan(){
+  let idea=document.getElementById("idea").value;
+  if(!idea){
+    alert("Write your idea first / اكتب فكرتك أولاً");
+    return;
   }
+  let plan=
+  "Startup Name: AI Generated Company\n\n"+
+  "Idea:\n"+idea+"\n\n"+
+  "Target Audience:\nOnline users and businesses\n\n"+
+  "Business Model:\nSubscription and digital services\n\n"+
+  "Marketing Strategy:\nSocial media + AI marketing\n\n"+
+  "First 100 Users Strategy:\nLaunch on social media platforms\n\n"+
+  "Expansion Plan:\nScale globally using AI tools";
+  document.getElementById("result").innerText=plan;
 }
 </script>
 
