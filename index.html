@@ -31,7 +31,6 @@ button{
   padding:12px 25px;
   border-radius:10px;
   cursor:pointer;
-  margin-top:20px;
 }
 
 .section{
@@ -52,64 +51,57 @@ button{
   width:250px;
 }
 </style>
-
 </head>
+
 <body>
 
 <header>NEXORA 🚀</header>
 
 <div class="hero">
   <h1>Build Your Startup with AI</h1>
-  <p>Create full business ideas, plans and logos in seconds</p>
-
+  <p>Create business, plans and logos instantly</p>
   <button onclick="start()">Start Building</button>
 </div>
 
 <div class="section">
-  <h2>🔥 Features</h2>
-  <p>AI Startup Generator</p>
-  <p>Business Plans</p>
-  <p>Startup Score</p>
-  <p>AI Logo Generator</p>
+<h2>💰 Pricing</h2>
+
+<div class="pricing">
+
+<div class="card">
+<h3>Free</h3>
+<p>$0</p>
 </div>
 
-<div class="section">
-  <h2>💰 Pricing</h2>
+<div class="card">
+<h3>Pro</h3>
+<p>$12/month</p>
+<button onclick="buy('pro')">Subscribe</button>
+</div>
 
-  <div class="pricing">
+<div class="card">
+<h3>Ultra</h3>
+<p>$31/month</p>
+<button onclick="buy('ultra')">Subscribe</button>
+</div>
 
-    <div class="card">
-      <h3>Free</h3>
-      <p>$0</p>
-      <p>Limited access</p>
-    </div>
-
-    <div class="card">
-      <h3>Pro</h3>
-      <p>$12/month</p>
-      <p>11 months + 1 free</p>
-    </div>
-
-    <div class="card">
-      <h3>Ultra</h3>
-      <p>$31/month</p>
-      <p>All features</p>
-    </div>
-
-  </div>
+</div>
 </div>
 
 <script>
 function start(){
-
 let user = localStorage.getItem("user");
-
 if(user){
-  window.location.href = "dashboard.html";
+  window.location.href="dashboard.html";
 }else{
-  window.location.href = "signup.html";
+  window.location.href="signup.html";
+}
 }
 
+// نظام اشتراك بسيط
+function buy(plan){
+  localStorage.setItem("plan", plan);
+  alert("Subscribed to " + plan);
 }
 </script>
 
