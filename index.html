@@ -31,6 +31,7 @@ button{
   padding:12px 25px;
   border-radius:10px;
   cursor:pointer;
+  margin:10px;
 }
 
 .section{
@@ -59,7 +60,7 @@ button{
 
 <div class="hero">
   <h1>Build Your Startup with AI</h1>
-  <p>Create business, plans and logos instantly</p>
+  <p>Create business, plans, logos and pitch decks instantly</p>
   <button onclick="start()">Start Building</button>
 </div>
 
@@ -98,10 +99,20 @@ if(user){
 }
 }
 
-// نظام اشتراك بسيط
 function buy(plan){
-  localStorage.setItem("plan", plan);
-  alert("Subscribed to " + plan);
+
+let user = localStorage.getItem("user");
+
+if(!user){
+alert("Create account first");
+window.location.href="signup.html";
+return;
+}
+
+localStorage.setItem("plan", plan);
+
+alert("Subscription activated: " + plan);
+window.location.href="dashboard.html";
 }
 </script>
 
