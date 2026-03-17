@@ -22,7 +22,7 @@ color:white;
 border:none;
 padding:10px;
 border-radius:8px;
-margin-top:10px;
+margin:5px;
 }
 
 .project{
@@ -42,7 +42,10 @@ border-radius:10px;
 
 <textarea id="idea" placeholder="Write your startup idea..."></textarea>
 <br>
-<button onclick="createProject()">Generate</button>
+
+<button onclick="createProject()">Generate Plan</button>
+<button onclick="generatePitch()">Generate Pitch</button>
+<button onclick="generateLogo()">Generate Logo</button>
 
 <h2>Your Projects</h2>
 <div id="projects"></div>
@@ -51,7 +54,20 @@ border-radius:10px;
 
 <script>
 
-function createProject(){
+function getPlan(){
+return localStorage.getItem("plan") || "free";
+}
+
+function checkAccess(){
+if(getPlan()==="free"){
+alert("Upgrade to Pro");
+return false;
+}
+return true;
+}
+
+// 🧠 خطة مشروع
+async function createProject(){
 
 let idea=document.getElementById("idea").value;
 
@@ -60,19 +76,11 @@ alert("Write idea");
 return;
 }
 
-// تحقق الاشتراك
-let plan = localStorage.getItem("plan") || "free";
+if(!checkAccess()) return;
 
-if(plan==="free"){
-alert("Upgrade to Pro to use AI");
-return;
-}
-
-// AI توليد
-let name="Nexora "+idea.split(" ")[0];
-
-let planText=`
-🚀 ${name}
+// AI بسيط
+let text = `
+🚀 Startup: ${idea}
 
 💡 Idea:
 ${idea}
@@ -86,22 +94,80 @@ Subscription SaaS
 📢 Marketing:
 TikTok + Ads
 
-🔥 Growth:
-Scale globally
-
-💸 Plan:
-${plan.toUpperCase()} User
+📈 Growth:
+Scale globally fast
 `;
+
+saveProject(idea, text);
+}
+
+// 🎤 Pitch Deck
+async function generatePitch(){
+
+let idea=document.getElementById("idea").value;
+
+if(!idea){
+alert("Write idea");
+return;
+}
+
+if(!checkAccess()) return;
+
+let text = `
+🎤 Pitch Deck
+
+Startup: ${idea}
+
+Problem:
+Users struggle to build startups
+
+Solution:
+Nexora AI solves it instantly
+
+Market:
+Global SaaS market
+
+Revenue:
+Subscriptions
+
+Vision:
+Build billion-dollar company
+`;
+
+saveProject("Pitch - " + idea, text);
+}
+
+// 🎨 Logo
+function generateLogo(){
+
+let idea=document.getElementById("idea").value;
+
+if(!idea){
+alert("Write idea");
+return;
+}
+
+let url = "https://image.pollinations.ai/prompt/" + encodeURIComponent("logo for " + idea);
+
+saveProject("Logo - " + idea, `<img src="${url}" width="200">`);
+}
+
+// حفظ
+function saveProject(name, content){
 
 let projects=JSON.parse(localStorage.getItem("projects"))||[];
 
-projects.push({name,planText});
+projects.push({
+name:name,
+content:content
+});
 
 localStorage.setItem("projects",JSON.stringify(projects));
 
 renderProjects();
 }
 
+// عرض
 function renderProjects(){
 
 let projects=JSON.parse(localStorage.getItem("projects"))||[];
@@ -113,7 +179,7 @@ projects.forEach(p=>{
 div.innerHTML+=`
 <div class="project">
 <h3>${p.name}</h3>
-<pre>${p.planText}</pre>
+<div>${p.content}</div>
 </div>
 `;
 });
