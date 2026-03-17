@@ -1,42 +1,25 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Signup - Nexora</title>
-<style>
-body{font-family:Arial;background:#0f172a;color:white;text-align:center;padding-top:100px;}
-input{padding:10px;margin:10px;border-radius:8px;border:none;width:250px;}
-button{padding:10px 20px;background:#4c6fff;color:white;border:none;border-radius:8px;}
-</style>
-</head>
-<body>
+<body style="text-align:center;background:#0f172a;color:white;padding-top:100px;">
 
-<h1>Create Account</h1>
+<h1>Signup</h1>
 
-<input type="email" id="email" placeholder="Email"><br>
-<input type="password" id="password" placeholder="Password"><br>
+<input id="email" placeholder="Email"><br><br>
+<input id="pass" placeholder="Password"><br><br>
 
-<button onclick="signup()">Sign Up</button>
-
-<p>Already have account? <a href="login.html" style="color:#4c6fff;">Login</a></p>
+<button onclick="signup()">Create</button>
 
 <script>
 function signup(){
+localStorage.setItem("user",JSON.stringify({
+email:email.value,
+password:pass.value
+}));
 
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
-
-if(!email || !password){
-  alert("Fill all fields");
-  return;
-}
-
-// حفظ المستخدم
-localStorage.setItem("user", JSON.stringify({email, password}));
-
-alert("Account created!");
-window.location.href = "login.html";
+alert("Created");
+window.location.href="login.html";
 }
 </script>
 
 </body>
-</html>
+</html
