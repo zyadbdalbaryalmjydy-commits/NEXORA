@@ -11,6 +11,7 @@
 
 <script>
 function login(){
+
 let user=JSON.parse(localStorage.getItem("user"));
 
 if(!user){
@@ -21,7 +22,7 @@ return;
 if(email.value===user.email && pass.value===user.password){
 window.location.href="dashboard.html";
 }else{
-alert("Wrong");
+alert("Wrong info");
 }
 }
 </script>
