@@ -1,42 +1,27 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Login - Nexora</title>
-<style>
-body{font-family:Arial;background:#0f172a;color:white;text-align:center;padding-top:100px;}
-input{padding:10px;margin:10px;border-radius:8px;border:none;width:250px;}
-button{padding:10px 20px;background:#4c6fff;color:white;border:none;border-radius:8px;}
-</style>
-</head>
-<body>
+<body style="text-align:center;background:#0f172a;color:white;padding-top:100px;">
 
 <h1>Login</h1>
 
-<input type="email" id="email" placeholder="Email"><br>
-<input type="password" id="password" placeholder="Password"><br>
+<input id="email" placeholder="Email"><br><br>
+<input id="pass" placeholder="Password"><br><br>
 
 <button onclick="login()">Login</button>
 
-<p>No account? <a href="signup.html" style="color:#4c6fff;">Sign up</a></p>
-
 <script>
 function login(){
-
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
-
-let user = JSON.parse(localStorage.getItem("user"));
+let user=JSON.parse(localStorage.getItem("user"));
 
 if(!user){
-  alert("No account found");
-  return;
+alert("No account");
+return;
 }
 
-if(email === user.email && password === user.password){
-  alert("Login success");
-  window.location.href = "dashboard.html";
+if(email.value===user.email && pass.value===user.password){
+window.location.href="dashboard.html";
 }else{
-  alert("Wrong email or password");
+alert("Wrong");
 }
 }
 </script>
