@@ -4,247 +4,112 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nexora AI</title>
+
 <style>
 body{
-  font-family: Arial, sans-serif;
   margin:0;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  font-family:Arial;
+  background:linear-gradient(to right,#0f172a,#1e3a8a);
   color:white;
   text-align:center;
 }
+
 header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
   padding:20px;
-  background:#0c1425;
-}
-.logo{
-  font-size:28px;
+  font-size:24px;
   font-weight:bold;
 }
-nav a{
-  color:white;
-  margin:10px;
-  text-decoration:none;
-}
+
 .hero{
-  padding:80px 20px;
+  margin-top:80px;
 }
-.hero h1{
-  font-size:48px;
-}
-textarea{
-  width:60%;
-  height:120px;
-  border-radius:10px;
-  border:none;
-  padding:10px;
-  font-size:16px;
-}
+
 button{
   background:#4c6fff;
   color:white;
-  padding:14px 30px;
   border:none;
-  border-radius:8px;
-  font-size:18px;
+  padding:12px 25px;
+  border-radius:10px;
   cursor:pointer;
   margin-top:20px;
 }
-.features{
-  padding:60px 20px;
-  background:#111a30;
+
+.section{
+  margin-top:80px;
 }
-.feature-box{
-  margin:20px;
-}
+
 .pricing{
-  padding:60px;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
 }
-.plan{
-  background:#1c2541;
-  padding:30px;
-  border-radius:10px;
-  display:inline-block;
-  margin:20px;
+
+.card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:12px;
   width:250px;
 }
-.plan h2{
-  font-size:28px;
-}
-.price{
-  font-size:32px;
-  margin:10px;
-}
-.result{
-  background:#111a30;
-  padding:20px;
-  margin:30px;
-  border-radius:10px;
-  white-space:pre-line;
-  text-align:left;
-}
-#logoContainer{
-  margin-top:20px;
-}
-.lang-switch{
-  display:flex;
-  gap:10px;
-}
-.lang-switch button{
-  padding:6px 12px;
-  font-size:14px;
-  border-radius:5px;
-  border:none;
-  cursor:pointer;
-}
 </style>
+
 </head>
 <body>
 
-<header>
-  <div class="logo">NEXORA</div>
-  <nav>
-    <a href="#">Home</a>
-    <a href="#">Features</a>
-    <a href="#">Pricing</a>
-  </nav>
-  <div class="lang-switch">
-    <button onclick="setLang('en')">EN</button>
-    <button onclick="setLang('ar')">AR</button>
+<header>NEXORA 🚀</header>
+
+<div class="hero">
+  <h1>Build Your Startup with AI</h1>
+  <p>Create full business ideas, plans and logos in seconds</p>
+
+  <button onclick="start()">Start Building</button>
+</div>
+
+<div class="section">
+  <h2>🔥 Features</h2>
+  <p>AI Startup Generator</p>
+  <p>Business Plans</p>
+  <p>Startup Score</p>
+  <p>AI Logo Generator</p>
+</div>
+
+<div class="section">
+  <h2>💰 Pricing</h2>
+
+  <div class="pricing">
+
+    <div class="card">
+      <h3>Free</h3>
+      <p>$0</p>
+      <p>Limited access</p>
+    </div>
+
+    <div class="card">
+      <h3>Pro</h3>
+      <p>$12/month</p>
+      <p>11 months + 1 free</p>
+    </div>
+
+    <div class="card">
+      <h3>Ultra</h3>
+      <p>$31/month</p>
+      <p>All features</p>
+    </div>
+
   </div>
-</header>
-
-<section class="hero">
-<h1 id="title">Build Your Startup With AI</h1>
-<p id="subtitle">Write your startup idea and Nexora will generate a full business plan.</p>
-
-<textarea id="idea" placeholder="Write your startup idea here"></textarea>
-<br>
-<button id="generateBtn" onclick="generatePlan()">Generate Business Plan</button>
-
-<div id="logoContainer"></div>
-<div id="result" class="result"></div>
-</section>
-
-<section class="features">
-<h2 id="featuresTitle">Features</h2>
-<div class="feature-box" id="f1">AI Business Plan Generator</div>
-<div class="feature-box" id="f2">Startup Name Generator</div>
-<div class="feature-box" id="f3">AI Marketing Strategy</div>
-<div class="feature-box" id="f4">Investor Pitch Deck</div>
-<div class="feature-box" id="f5">AI Logo Generator</div>
-<div class="feature-box" id="f6">Startup Share Link</div>
-</section>
-
-<section class="pricing">
-<h2 id="pricingTitle">Pricing</h2>
-
-<div class="plan">
-<h2 id="proTitle">Pro</h2>
-<div class="price">$12/month</div>
-<p>Pay 11 months, get 12th month free</p>
 </div>
-
-<div class="plan">
-<h2 id="ultraTitle">Ultra</h2>
-<div class="price">$31/month</div>
-<p>Pay 11 months, get 12th month free</p>
-</div>
-</section>
 
 <script>
-const translations = {
-en:{
-title:"Build Your Startup With AI",
-subtitle:"Write your startup idea and Nexora will generate a full business plan.",
-button:"Generate Business Plan",
-featuresTitle:"Features",
-f1:"AI Business Plan Generator",
-f2:"Startup Name Generator",
-f3:"AI Marketing Strategy",
-f4:"Investor Pitch Deck",
-f5:"AI Logo Generator",
-f6:"Startup Share Link",
-pricingTitle:"Pricing",
-proTitle:"Pro",
-ultraTitle:"Ultra"
-},
-ar:{
-title:"ابنِ شركتك باستخدام الذكاء الاصطناعي",
-subtitle:"اكتب فكرة مشروعك وسينشئ لك Nexora خطة عمل كاملة.",
-button:"إنشاء خطة مشروع",
-featuresTitle:"الميزات",
-f1:"مولد خطة عمل بالذكاء الاصطناعي",
-f2:"مولد أسماء الشركات",
-f3:"خطة تسويق بالذكاء الاصطناعي",
-f4:"عرض للمستثمرين",
-f5:"مولد شعار بالذكاء الاصطناعي",
-f6:"رابط مشاركة المشروع",
-pricingTitle:"الأسعار",
-proTitle:"برو",
-ultraTitle:"ألترا"
-}
-};
+function start(){
 
-function setLang(lang){
-  document.getElementById("title").innerText = translations[lang].title;
-  document.getElementById("subtitle").innerText = translations[lang].subtitle;
-  document.getElementById("generateBtn").innerText = translations[lang].button;
-  document.getElementById("featuresTitle").innerText = translations[lang].featuresTitle;
-  document.getElementById("f1").innerText = translations[lang].f1;
-  document.getElementById("f2").innerText = translations[lang].f2;
-  document.getElementById("f3").innerText = translations[lang].f3;
-  document.getElementById("f4").innerText = translations[lang].f4;
-  document.getElementById("f5").innerText = translations[lang].f5;
-  document.getElementById("f6").innerText = translations[lang].f6;
-  document.getElementById("pricingTitle").innerText = translations[lang].pricingTitle;
-  document.getElementById("proTitle").innerText = translations[lang].proTitle;
-  document.getElementById("ultraTitle").innerText = translations[lang].ultraTitle;
+let user = localStorage.getItem("user");
+
+if(user){
+  window.location.href = "dashboard.html";
+}else{
+  window.location.href = "signup.html";
 }
 
-function generatePlan(){
-
-let idea = document.getElementById("idea").value;
-if(!idea){
-  alert("Write your idea first / اكتب الفكرة أولاً");
-  return;
-}
-
-// توليد اسم الشركة
-let startupName = "Nexora " + idea.split(" ")[0];
-
-// تقييم الفكرة
-let score = Math.floor(Math.random()*30)+70;
-
-// توليد رابط مشاركة
-let shareLink =
-"https://nexora.vercel.app/startup/" +
-idea.replace(/\s+/g,'-').toLowerCase();
-
-// توليد شعار بسيط (SVG) بناء على أول حرف من اسم الشركة
-let firstChar = startupName.charAt(0).toUpperCase();
-let logoSVG = `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="50" cy="50" r="48" fill="#4c6fff"/>
-  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
-        font-size="50" fill="white" font-family="Arial">${firstChar}</text>
-</svg>`;
-
-// عرض الشعار في الصفحة
-document.getElementById("logoContainer").innerHTML = logoSVG;
-
-// توليد الخطة
-let plan =
-"🚀 Startup Name:\n"+startupName+
-"\n\n💡 Idea:\n"+idea+
-"\n\n🎯 Target Audience:\nOnline users and businesses"+
-"\n\n💰 Business Model:\nSubscription + digital services"+
-"\n\n📢 Marketing Plan:\nTikTok videos + Instagram ads"+
-"\n\n📊 Startup Score:\n"+score+"/100"+
-"\n\n🔗 Share Your Startup:\n"+shareLink;
-
-document.getElementById("result").innerText = plan;
 }
 </script>
 
