@@ -1,24 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nexora</title>
+
 <style>
-body{background:#0f172a;color:white;text-align:center;font-family:Arial;}
-button{padding:10px 20px;background:#4c6fff;color:white;border:none;border-radius:10px;margin:10px;}
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(to bottom, #0b1d3a, #3a6cf4);
+  color: white;
+  text-align: center;
+}
+
+.container {
+  margin-top: 100px;
+}
+
+input {
+  display: block;
+  margin: 10px auto;
+  padding: 12px;
+  width: 250px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  color: black;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+#app {
+  display: none;
+}
 </style>
 </head>
+
 <body>
 
-<h1>NEXORA 🚀</h1>
+<div class="container" id="auth">
+  <h1>🚀 Nexora</h1>
+  <h2>إنشاء حساب / تسجيل دخول</h2>
 
-<button onclick="go('login.html')">Login</button>
-<button onclick="go('signup.html')">Signup</button>
+  <input type="email" id="email" placeholder="البريد الإلكتروني">
+  <input type="password" id="password" placeholder="كلمة المرور">
+
+  <button onclick="signup()">إنشاء حساب</button>
+  <button onclick="login()">تسجيل دخول</button>
+</div>
+
+<div class="container" id="app">
+  <h1>🎉 مرحبًا بك في Nexora</h1>
+  <p id="userEmail"></p>
+
+  <textarea id="idea" placeholder="اكتب فكرتك..." style="width:300px;height:100px;"></textarea>
+  <br>
+  <button onclick="generate()">🚀 توليد خطة</button>
+
+  <pre id="result"></pre>
+
+  <button onclick="logout()">تسجيل خروج</button>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
 <script>
-function go(page){
-window.location.href = page;
+// 🔥 حط بيانات Firebase هنا
+const firebaseConfig = {
+  apiKey: "PUT_API_KEY",
+  authDomain: "PUT_DOMAIN",
+  projectId: "PUT_PROJECT_ID",
+};
+
+// تشغيل Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// تسجيل
+function signup() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(() => alert("تم إنشاء الحساب 🚀"))
+    .catch(err => alert(err.message));
+}
+
+// تسجيل دخول
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => alert("تم تسجيل الدخول ✅"))
+    .catch(err => alert(err.message));
+}
+
+// تسجيل خروج
+function logout() {
+  auth.signOut();
+}
+
+// مراقبة الحالة
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById("auth").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    document.getElementById("userEmail").innerText = user.email;
+  } else {
+    document.getElementById("auth").style.display = "block";
+    document.getElementById("app").style.display = "none";
+  }
+});
+
+// AI وهمي مؤقت
+function generate() {
+  const idea = document.getElementById("idea").value;
+
+  document.getElementById("result").innerText = `
+🚀 خطة مشروع:
+
+💡 الفكرة:
+${idea}
+
+📊 السوق:
+سوق كبير وقابل للنمو
+
+💰 الربح:
+اشتراكات شهرية
+
+📈 التوسع:
+إضافة ميزات AI متقدمة
+
+🔥 نصيحة:
+ابدأ بـ MVP واطلق بسرعة
+  `;
 }
 </script>
 
 </body>
-</html>
+  </html>
