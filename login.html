@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
-<body style="text-align:center;background:#0f172a;color:white;padding-top:100px;">
+<head>
+<title>Login</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+</head>
+
+<body style="background:#0f172a;color:white;text-align:center;padding-top:100px;">
 
 <h1>Login</h1>
 
@@ -10,21 +16,23 @@
 <button onclick="login()">Login</button>
 
 <script>
+
+const firebaseConfig = {
+apiKey: "YOUR_KEY",
+authDomain: "YOUR_DOMAIN",
+projectId: "YOUR_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+
 function login(){
-
-let user=JSON.parse(localStorage.getItem("user"));
-
-if(!user){
-alert("No account");
-return;
-}
-
-if(email.value===user.email && pass.value===user.password){
+firebase.auth().signInWithEmailAndPassword(email.value, pass.value)
+.then(()=>{
 window.location.href="dashboard.html";
-}else{
-alert("Wrong info");
+})
+.catch(e=>alert(e.message));
 }
-}
+
 </script>
 
 </body>
