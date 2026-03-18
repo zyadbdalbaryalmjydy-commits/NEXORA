@@ -3,189 +3,141 @@
 <head>
 <title>Dashboard</title>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
 <style>
-body{font-family:Arial;background:#0f172a;color:white;margin:0;}
-
-.main{padding:20px;}
-
-textarea{
-width:100%;
-height:100px;
-border-radius:10px;
-border:none;
-padding:10px;
-}
-
-button{
-background:#4c6fff;
-color:white;
-border:none;
-padding:10px;
-border-radius:8px;
-margin:5px;
-}
-
-.project{
-background:#1e293b;
-padding:15px;
-margin:10px 0;
-border-radius:10px;
-}
+body{background:#0f172a;color:white;font-family:Arial;padding:20px;}
+textarea{width:100%;height:100px;padding:10px;}
+button{margin:5px;padding:10px;background:#4c6fff;color:white;border:none;border-radius:8px;}
+.card{background:#1e293b;padding:15px;margin-top:10px;border-radius:10px;}
 </style>
 </head>
 
 <body>
 
-<div class="main">
-
 <h1>🚀 Nexora Dashboard</h1>
 
-<textarea id="idea" placeholder="Write your startup idea..."></textarea>
-<br>
+<textarea id="idea" placeholder="Write idea..."></textarea><br>
 
-<button onclick="createProject()">Generate Plan</button>
-<button onclick="generatePitch()">Generate Pitch</button>
-<button onclick="generateLogo()">Generate Logo</button>
+<button onclick="generateAI()">Generate Plan</button>
+<button onclick="generateLogo()">Logo</button>
+<button onclick="buildWebsite()">Website</button>
+
+<div id="result"></div>
 
 <h2>Your Projects</h2>
 <div id="projects"></div>
 
-</div>
-
 <script>
 
-function getPlan(){
-return localStorage.getItem("plan") || "free";
-}
+// 🔥 Firebase config
+const firebaseConfig = {
+apiKey: "YOUR_KEY",
+authDomain: "YOUR_DOMAIN",
+projectId: "YOUR_ID"
+};
 
-function checkAccess(){
-if(getPlan()==="free"){
-alert("Upgrade to Pro");
-return false;
-}
-return true;
-}
+firebase.initializeApp(firebaseConfig);
 
-// 🧠 خطة مشروع
-async function createProject(){
+const db = firebase.firestore();
 
-let idea=document.getElementById("idea").value;
+// 🧠 AI
+async function generateAI(){
 
-if(!idea){
-alert("Write idea");
-return;
-}
+let idea = document.getElementById("idea").value;
 
-if(!checkAccess()) return;
+let res = await fetch("/api/generate",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({idea})
+});
 
-// AI بسيط
-let text = `
-🚀 Startup: ${idea}
+let data = await res.json();
 
-💡 Idea:
-${idea}
-
-🎯 Target:
-Global users
-
-💰 Business:
-Subscription SaaS
-
-📢 Marketing:
-TikTok + Ads
-
-📈 Growth:
-Scale globally fast
-`;
-
-saveProject(idea, text);
-}
-
-// 🎤 Pitch Deck
-async function generatePitch(){
-
-let idea=document.getElementById("idea").value;
-
-if(!idea){
-alert("Write idea");
-return;
-}
-
-if(!checkAccess()) return;
-
-let text = `
-🎤 Pitch Deck
-
-Startup: ${idea}
-
-Problem:
-Users struggle to build startups
-
-Solution:
-Nexora AI solves it instantly
-
-Market:
-Global SaaS market
-
-Revenue:
-Subscriptions
-
-Vision:
-Build billion-dollar company
-`;
-
-saveProject("Pitch - " + idea, text);
+saveProject(idea, data.result);
 }
 
 // 🎨 Logo
 function generateLogo(){
 
-let idea=document.getElementById("idea").value;
+let idea = document.getElementById("idea").value;
 
-if(!idea){
-alert("Write idea");
+let url = "https://image.pollinations.ai/prompt/" + idea;
+
+saveProject("Logo", `<img src="${url}" width="150">`);
+}
+
+// 🌐 Website
+function buildWebsite(){
+
+let idea = document.getElementById("idea").value;
+
+let code = `<h1>${idea}</h1><p>Built with Nexora</p>`;
+
+saveProject("Website", `<textarea>${code}</textarea>`);
+}
+
+// 💾 حفظ في Firebase
+function saveProject(name, content){
+
+let user = firebase.auth().currentUser;
+
+if(!user){
+alert("Login first");
 return;
 }
 
-let url = "https://image.pollinations.ai/prompt/" + encodeURIComponent("logo for " + idea);
-
-saveProject("Logo - " + idea, `<img src="${url}" width="200">`);
-}
-
-// حفظ
-function saveProject(name, content){
-
-let projects=JSON.parse(localStorage.getItem("projects"))||[];
-
-projects.push({
+db.collection("projects").add({
+uid:user.uid,
 name:name,
 content:content
 });
 
-localStorage.setItem("projects",JSON.stringify(projects));
-
-renderProjects();
+loadProjects();
 }
 
-// عرض
-function renderProjects(){
+// 📂 تحميل المشاريع
+function loadProjects(){
 
-let projects=JSON.parse(localStorage.getItem("projects"))||[];
+let user = firebase.auth().currentUser;
+
+if(!user) return;
+
+db.collection("projects")
+.where("uid","==",user.uid)
+.get()
+.then(snapshot=>{
+
 let div=document.getElementById("projects");
-
 div.innerHTML="";
 
-projects.forEach(p=>{
+snapshot.forEach(doc=>{
+let p = doc.data();
+
 div.innerHTML+=`
-<div class="project">
+<div class="card">
 <h3>${p.name}</h3>
 <div>${p.content}</div>
+<button onclick="launchProject('${p.name}')">Launch 🚀</button>
 </div>
 `;
 });
+
+});
 }
 
-renderProjects();
+// 🚀 Launch
+function launchProject(name){
+alert("Launching " + name + " 🚀");
+}
+
+firebase.auth().onAuthStateChanged(user=>{
+if(user){
+loadProjects();
+}
+});
 
 </script>
 
