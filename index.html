@@ -76,10 +76,27 @@ button {
 <script>
 // 🔥 حط بيانات Firebase هنا
 const firebaseConfig = {
-  apiKey: "PUT_API_KEY",
-  authDomain: "PUT_DOMAIN",
-  projectId: "PUT_PROJECT_ID",
+  // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
+  authDomain: "nexora-1c66b.firebaseapp.com",
+  projectId: "nexora-1c66b",
+  storageBucket: "nexora-1c66b.firebasestorage.app",
+  messagingSenderId: "964700323381",
+  appId: "1:964700323381:web:5826dd261cb062f401fb7c",
+  measurementId: "G-HVC60XSN6D"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 // تشغيل Firebase
 firebase.initializeApp(firebaseConfig);
