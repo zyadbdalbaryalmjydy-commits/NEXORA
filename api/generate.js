@@ -1,9 +1,11 @@
 export default async function handler(req, res) {
-
   try {
+    // تحقق من طريقة الطلب (POST فقط)
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Method not allowed" });
+    }
 
     const apiKey = process.env.OPENAI_API_KEY;
-
     const { idea } = req.body;
 
     if (!idea) {
@@ -14,34 +16,35 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
           {
             role: "user",
-            content: `Create a professional startup plan for: ${idea}`
-          }
-        ]
-      })
+            content: `Create a professional startup plan for: ${idea}`,
+          },
+        ],
+      }),
     });
 
     const data = await response.json();
 
-    // حماية لو صار خطأ
-    if (!data.choices) {
-      return res.status(500).json({ error: "AI error", data });
+    if (!data.choices || !data.choices.length) {
+      return res.status(500).json({ error: "AI returned no choices", data });
     }
 
+    // إرسال نتيجة واضحة للـ frontend
     res.status(200).json({
-      result: data.choices[0].message.content
+      success: true,
+      result: data.choices[0].message?.content || "No content returned",
     });
 
   } catch (error) {
     res.status(500).json({
       error: "Server error",
-      details: error.message
+      details: error.message,
     });
   }
 }
