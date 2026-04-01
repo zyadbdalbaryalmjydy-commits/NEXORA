@@ -1,7 +1,7 @@
 import { db, collection, addDoc, getDocs } from "./firebase.js";
 
 
-// 🔥 توليد خطة مشروع AI
+// 🔥 توليد خطة مشروع
 
 async function generatePlan() {
 
@@ -45,13 +45,13 @@ alert(data.result);
 
 // حفظ المشروع
 
-saveProject(idea, data.result);
+await saveProject(idea, data.result);
 
 }
 
 catch (error) {
 
-alert("خطأ في توليد الخطة");
+alert("❌ خطأ في توليد الخطة");
 
 }
 
@@ -83,6 +83,8 @@ created: new Date()
 
 alert("✅ تم حفظ المشروع");
 
+loadProjects();
+
 }
 
 catch (error) {
@@ -107,6 +109,8 @@ collection(db, "projects")
 
 let list = document.getElementById("projectsList");
 
+if (!list) return;
+
 list.innerHTML = "";
 
 querySnapshot.forEach((doc) => {
@@ -117,11 +121,13 @@ let item = document.createElement("div");
 
 item.innerHTML = `
 
+<div style="background:white;color:black;padding:10px;margin:10px;border-radius:10px;">
+
 <h3>${data.name}</h3>
 
 <p>${data.content.substring(0,100)}...</p>
 
-<hr>
+</div>
 
 `;
 
@@ -133,13 +139,9 @@ list.appendChild(item);
 
 
 
-// 🎨 توليد شعار (مؤقت)
+// 🎨 شعار
 
 function generateLogo() {
-
-let name = prompt("اكتب اسم الشركة:");
-
-if (!name) return;
 
 alert("🎨 سيتم توليد شعار قريبًا");
 
@@ -147,13 +149,9 @@ alert("🎨 سيتم توليد شعار قريبًا");
 
 
 
-// 🌐 Build Website
+// 🌐 موقع
 
 function buildWebsite() {
-
-let idea = prompt("اكتب فكرة الموقع:");
-
-if (!idea) return;
 
 alert("🌐 سيتم إنشاء موقع قريبًا");
 
@@ -161,7 +159,7 @@ alert("🌐 سيتم إنشاء موقع قريبًا");
 
 
 
-// 🚀 Launch Project
+// 🚀 إطلاق
 
 function launchProject() {
 
@@ -171,7 +169,16 @@ alert("🚀 سيتم إطلاق المشروع قريبًا");
 
 
 
-// تحميل المشاريع عند فتح الصفحة
+// 🔥 الحل المهم: ربط الأزرار بالنافذة
+
+window.generatePlan = generatePlan;
+window.generateLogo = generateLogo;
+window.buildWebsite = buildWebsite;
+window.launchProject = launchProject;
+
+
+
+// تحميل المشاريع
 
 window.onload = function () {
 
