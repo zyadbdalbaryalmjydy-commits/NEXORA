@@ -2,11 +2,10 @@
 <html lang="ar">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Nexora 🚀</title>
+<title>Nexora</title>
 
 <style>
 
@@ -16,36 +15,47 @@ font-family: Arial;
 background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color: white;
 text-align: center;
-padding: 20px;
+padding: 40px;
+
+}
+
+h1 {
+
+font-size: 40px;
 
 }
 
 button {
 
-padding: 12px 20px;
-margin: 10px;
+background: linear-gradient(45deg,#3a7bd5,#00d2ff);
 border: none;
-border-radius: 10px;
-background: #3b82f6;
+padding: 15px 25px;
+margin: 10px;
+font-size: 18px;
+border-radius: 12px;
 color: white;
 cursor: pointer;
 
 }
 
-button:hover {
+input {
 
-background: #2563eb;
+padding: 12px;
+width: 80%;
+max-width: 400px;
+border-radius: 10px;
+border: none;
+margin-top: 20px;
 
 }
 
-.card {
+#result {
 
-background: white;
-color: black;
-padding: 15px;
-margin: 15px auto;
+margin-top: 30px;
+background: rgba(255,255,255,0.1);
+padding: 20px;
 border-radius: 12px;
-max-width: 400px;
+white-space: pre-line;
 
 }
 
@@ -57,43 +67,40 @@ max-width: 400px;
 
 <h1>🚀 Nexora</h1>
 
-<h3>
-منصة بناء المشاريع بالذكاء الاصطناعي
-</h3>
+<p>منصة بناء المشاريع بالذكاء الاصطناعي</p>
 
-<button onclick="generatePlan()">
 
+<!-- مربع الفكرة -->
+
+<input
+id="ideaInput"
+placeholder="اكتب فكرة مشروعك هنا..."
+>
+
+
+<br><br>
+
+<!-- الأزرار -->
+
+<button id="generatePlan">
 📊 توليد خطة مشروع
-
 </button>
 
-<button onclick="generateLogo()">
-
+<button id="generateLogo">
 🎨 توليد شعار
-
 </button>
 
-<button onclick="buildWebsite()">
 
-🌐 Build Website
+<!-- النتيجة -->
 
-</button>
+<div id="result">
 
-<button onclick="launchProject()">
-
-🚀 Launch Project
-
-</button>
-
-<h2>
-📂 المشاريع المحفوظة
-</h2>
-
-<div id="projectsList">
+هنا ستظهر خطة المشروع...
 
 </div>
 
-<script type="module" src="firebase.js"></script>
+
+<!-- ربط الجافاسكربت -->
 
 <script type="module" src="app.js"></script>
 
