@@ -1,15 +1,6 @@
-// زر توليد الشعار
-const logoBtn = document.getElementById("generateLogo");
+// التأكد أن الصفحة جاهزة
 
-if (logoBtn) {
-logoBtn.addEventListener("click", () => {
-
-alert("🎨 سيتم إنشاء شعار قريبًا");
-
-});
-}
-
-
+document.addEventListener("DOMContentLoaded", function () {
 
 // زر توليد الخطة
 
@@ -17,13 +8,25 @@ const planBtn = document.getElementById("generatePlan");
 
 if (planBtn) {
 
-planBtn.addEventListener("click", async () => {
+planBtn.addEventListener("click", async function () {
 
 try {
 
-// نص الفكرة
-
 const ideaInput = document.getElementById("ideaInput");
+
+const resultBox = document.getElementById("result");
+
+
+
+if (!ideaInput) {
+
+alert("لم يتم العثور على مربع الفكرة");
+
+return;
+
+}
+
+
 
 const idea = ideaInput.value;
 
@@ -39,7 +42,7 @@ return;
 
 
 
-// إرسال الطلب إلى API
+// إرسال الطلب
 
 const response = await fetch("/api/generate", {
 
@@ -67,8 +70,6 @@ const data = await response.json();
 
 // عرض النتيجة
 
-const resultBox = document.getElementById("result");
-
 if (resultBox) {
 
 resultBox.innerText = data.result;
@@ -79,7 +80,7 @@ resultBox.innerText = data.result;
 
 catch (error) {
 
-alert("حدث خطأ أثناء توليد الخطة");
+alert("حدث خطأ أثناء توليد خطة");
 
 console.error(error);
 
@@ -88,3 +89,21 @@ console.error(error);
 });
 
 }
+
+
+
+// زر توليد الشعار
+
+const logoBtn = document.getElementById("generateLogo");
+
+if (logoBtn) {
+
+logoBtn.addEventListener("click", function () {
+
+alert("🎨 سيتم إنشاء شعار قريبًا");
+
+});
+
+}
+
+});
