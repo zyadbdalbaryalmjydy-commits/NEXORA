@@ -1,59 +1,49 @@
-// استيراد Firebase
+// Firebase Config
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import {
+import { 
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+import { 
 getFirestore,
-
 collection,
-
 addDoc,
-
 getDocs
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
-// ⚠️ ضع بيانات Firebase الخاصة بك هنا
-
 const firebaseConfig = {
 
-apiKey: "PUT_API_KEY_HERE",
+apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
 
-authDomain: "PUT_PROJECT_ID.firebaseapp.com",
+authDomain: "nexora-1c66b.firebaseapp.com",
 
-projectId: "PUT_PROJECT_ID",
+projectId: "nexora-1c66b",
 
-storageBucket: "PUT_PROJECT_ID.appspot.com",
+storageBucket: "nexora-1c66b.firebasestorage.app",
 
-messagingSenderId: "PUT_SENDER_ID",
+messagingSenderId: "964700323381",
 
-appId: "PUT_APP_ID"
+appId: "1:964700323381:web:5826dd261cb062f401fb7c"
 
 };
 
 
 
-// تشغيل Firebase
-
 const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
 
 const db = getFirestore(app);
 
 
 
-// تصدير للاستخدام
-
-export {
-
-db,
-
-collection,
-
-addDoc,
-
-getDocs
-
-};
+export { auth, db };
+export { createUserWithEmailAndPassword };
+export { signInWithEmailAndPassword };
+export { collection, addDoc, getDocs };
