@@ -1,145 +1,275 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>Dashboard</title>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<html lang="ar">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Nexora Dashboard</title>
 
 <style>
-body{background:#0f172a;color:white;font-family:Arial;padding:20px;}
-textarea{width:100%;height:100px;padding:10px;}
-button{margin:5px;padding:10px;background:#4c6fff;color:white;border:none;border-radius:8px;}
-.card{background:#1e293b;padding:15px;margin-top:10px;border-radius:10px;}
+
+body {
+
+font-family: Arial;
+
+background: #0f172a;
+
+color: white;
+
+text-align: center;
+
+padding: 20px;
+
+}
+
+textarea {
+
+width: 90%;
+
+height: 100px;
+
+border-radius: 10px;
+
+padding: 10px;
+
+}
+
+button {
+
+padding: 12px 20px;
+
+border-radius: 10px;
+
+margin: 10px;
+
+cursor: pointer;
+
+font-size: 16px;
+
+}
+
+.project {
+
+background: #1e293b;
+
+padding: 10px;
+
+margin: 10px;
+
+border-radius: 10px;
+
+}
+
 </style>
+
 </head>
 
 <body>
 
 <h1>🚀 Nexora Dashboard</h1>
 
-<textarea id="idea" placeholder="Write idea..."></textarea><br>
+<p>🔥 اشتراك Pro مفعل مجانًا مؤقت</p>
 
-<button onclick="generateAI()">Generate Plan</button>
-<button onclick="generateLogo()">Logo</button>
-<button onclick="buildWebsite()">Website</button>
+<textarea id="idea" placeholder="اكتب فكرة مشروعك..."></textarea>
 
-<div id="result"></div>
+<br>
 
-<h2>Your Projects</h2>
+<button onclick="generatePlan()">
+
+📊 توليد خطة مشروع
+
+</button>
+
+<button onclick="saveProject()">
+
+💾 حفظ المشروع
+
+</button>
+
+<h2>📁 المشاريع المحفوظة</h2>
+
 <div id="projects"></div>
 
-<script>
+<script type="module">
 
-// 🔥 Firebase config
-const firebaseConfig = {
-apiKey: "YOUR_KEY",
-authDomain: "YOUR_DOMAIN",
-projectId: "YOUR_ID"
-};
+import {
 
-firebase.initializeApp(firebaseConfig);
+db,
 
-const db = firebase.firestore();
+collection,
 
-// 🧠 AI
-async function generateAI(){
+addDoc,
 
-let idea = document.getElementById("idea").value;
+getDocs
 
-let res = await fetch("/api/generate",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({idea})
-});
+} from "./firebase.js";
 
-let data = await res.json();
 
-saveProject(idea, data.result);
-}
 
-// 🎨 Logo
-function generateLogo(){
+// توليد خطة
 
-let idea = document.getElementById("idea").value;
+window.generatePlan = async function() {
 
-let url = "https://image.pollinations.ai/prompt/" + idea;
+const idea = document.getElementById("idea").value;
 
-saveProject("Logo", `<img src="${url}" width="150">`);
-}
 
-// 🌐 Website
-function buildWebsite(){
 
-let idea = document.getElementById("idea").value;
+if (!idea) {
 
-let code = `<h1>${idea}</h1><p>Built with Nexora</p>`;
+alert("اكتب فكرة أولاً");
 
-saveProject("Website", `<textarea>${code}</textarea>`);
-}
-
-// 💾 حفظ في Firebase
-function saveProject(name, content){
-
-let user = firebase.auth().currentUser;
-
-if(!user){
-alert("Login first");
 return;
+
 }
 
-db.collection("projects").add({
-uid:user.uid,
-name:name,
-content:content
+
+
+const response = await fetch("/api/generate", {
+
+method: "POST",
+
+headers: {
+
+"Content-Type": "application/json"
+
+},
+
+body: JSON.stringify({
+
+prompt: idea
+
+})
+
 });
 
-loadProjects();
+
+
+const data = await response.json();
+
+
+
+document.getElementById("idea").value = data.result;
+
 }
 
-// 📂 تحميل المشاريع
-function loadProjects(){
 
-let user = firebase.auth().currentUser;
 
-if(!user) return;
+// حفظ مشروع
 
-db.collection("projects")
-.where("uid","==",user.uid)
-.get()
-.then(snapshot=>{
+window.saveProject = async function() {
 
-let div=document.getElementById("projects");
-div.innerHTML="";
+const content = document.getElementById("idea").value;
 
-snapshot.forEach(doc=>{
-let p = doc.data();
 
-div.innerHTML+=`
-<div class="card">
-<h3>${p.name}</h3>
-<div>${p.content}</div>
-<button onclick="launchProject('${p.name}')">Launch 🚀</button>
-</div>
+
+if (!content) {
+
+alert("لا يوجد مشروع لحفظه");
+
+return;
+
+}
+
+
+
+try {
+
+await addDoc(collection(db, "projects"), {
+
+content: content,
+
+date: new Date()
+
+});
+
+
+
+alert("✅ تم حفظ المشروع");
+
+
+
+loadProjects();
+
+}
+
+catch (error) {
+
+alert("❌ خطأ في الحفظ");
+
+}
+
+}
+
+
+
+// تحميل المشاريع
+
+async function loadProjects() {
+
+const querySnapshot = await getDocs(
+
+collection(db, "projects")
+
+);
+
+
+
+const container = document.getElementById("projects");
+
+container.innerHTML = "";
+
+
+
+querySnapshot.forEach((doc) => {
+
+const div = document.createElement("div");
+
+div.className = "project";
+
+
+
+div.innerHTML = `
+
+📄 ${doc.data().content}
+
+<br>
+
+<button onclick="launchProject()">
+
+🚀 Launch Project
+
+</button>
+
 `;
-});
+
+
+
+container.appendChild(div);
 
 });
+
 }
 
-// 🚀 Launch
-function launchProject(name){
-alert("Launching " + name + " 🚀");
+
+
+// Launch Project
+
+window.launchProject = function() {
+
+alert("🚀 سيتم إطلاق المشروع قريبًا");
+
 }
 
-firebase.auth().onAuthStateChanged(user=>{
-if(user){
+
+
+// تحميل المشاريع عند فتح الصفحة
+
 loadProjects();
-}
-});
 
 </script>
 
 </body>
+
 </html>
