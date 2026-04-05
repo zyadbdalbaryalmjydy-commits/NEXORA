@@ -1,21 +1,23 @@
-// Firebase Config
+// Firebase Setup
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 
-import { 
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import { 
+import {
 getFirestore,
 collection,
 addDoc,
 getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+}
+from
+"https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 
+
+// Firebase Config
 
 const firebaseConfig = {
 
@@ -37,13 +39,15 @@ appId: "1:964700323381:web:5826dd261cb062f401fb7c"
 
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
-
 const db = getFirestore(app);
 
 
 
-export { auth, db };
-export { createUserWithEmailAndPassword };
-export { signInWithEmailAndPassword };
-export { collection, addDoc, getDocs };
+export {
+
+db,
+collection,
+addDoc,
+getDocs
+
+};
