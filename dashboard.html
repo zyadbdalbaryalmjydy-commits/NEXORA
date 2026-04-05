@@ -1,65 +1,41 @@
 <!DOCTYPE html>
-
 <html lang="ar">
 
 <head>
 
 <meta charset="UTF-8">
-
 <title>Nexora Dashboard</title>
 
 <style>
 
 body {
-
 font-family: Arial;
-
 background: #0f172a;
-
 color: white;
-
 text-align: center;
-
 padding: 20px;
-
 }
 
 textarea {
-
 width: 90%;
-
-height: 100px;
-
+height: 120px;
 border-radius: 10px;
-
 padding: 10px;
-
 }
 
 button {
-
 padding: 12px 20px;
-
 border-radius: 10px;
-
 margin: 10px;
-
 cursor: pointer;
-
 font-size: 16px;
-
 }
 
 .project {
-
 background: #1e293b;
-
 padding: 10px;
-
 margin: 10px;
-
 border-radius: 10px;
-
 }
 
 </style>
@@ -72,135 +48,111 @@ border-radius: 10px;
 
 <p>🔥 اشتراك Pro مفعل مجانًا مؤقت</p>
 
-<textarea id="idea" placeholder="اكتب فكرة مشروعك..."></textarea>
+
+<!-- مربع الفكرة -->
+
+<textarea id="idea"
+placeholder="اكتب فكرة مشروعك هنا...">
+</textarea>
 
 <br>
 
-<button onclick="generatePlan()">
 
+<!-- الأزرار -->
+
+<button id="generateBtn">
 📊 توليد خطة مشروع
-
 </button>
 
-<button onclick="saveProject()">
-
+<button id="saveBtn">
 💾 حفظ المشروع
-
 </button>
+
 
 <h2>📁 المشاريع المحفوظة</h2>
 
 <div id="projects"></div>
 
+
 <script type="module">
 
 import {
-
 db,
-
 collection,
-
 addDoc,
-
 getDocs
-
 } from "./firebase.js";
 
 
 
 // توليد خطة
 
-window.generatePlan = async function() {
+document.getElementById("generateBtn")
+.addEventListener("click", async () => {
 
-const idea = document.getElementById("idea").value;
-
-
+const idea =
+document.getElementById("idea").value;
 
 if (!idea) {
 
 alert("اكتب فكرة أولاً");
-
 return;
 
 }
 
-
-
-const response = await fetch("/api/generate", {
+const response =
+await fetch("/api/generate", {
 
 method: "POST",
 
 headers: {
-
 "Content-Type": "application/json"
-
 },
 
 body: JSON.stringify({
-
 prompt: idea
-
 })
 
 });
 
+const data =
+await response.json();
 
+document.getElementById("idea").value =
+data.result;
 
-const data = await response.json();
-
-
-
-document.getElementById("idea").value = data.result;
-
-}
+});
 
 
 
 // حفظ مشروع
 
-window.saveProject = async function() {
+document.getElementById("saveBtn")
+.addEventListener("click", async () => {
 
-const content = document.getElementById("idea").value;
-
-
+const content =
+document.getElementById("idea").value;
 
 if (!content) {
 
-alert("لا يوجد مشروع لحفظه");
-
+alert("لا يوجد مشروع");
 return;
 
 }
 
-
-
-try {
-
-await addDoc(collection(db, "projects"), {
-
+await addDoc(
+collection(db, "projects"),
+{
 content: content,
-
 date: new Date()
-
-});
-
-
+}
+);
 
 alert("✅ تم حفظ المشروع");
 
-
-
 loadProjects();
 
-}
-
-catch (error) {
-
-alert("❌ خطأ في الحفظ");
-
-}
-
-}
+});
 
 
 
@@ -208,43 +160,30 @@ alert("❌ خطأ في الحفظ");
 
 async function loadProjects() {
 
-const querySnapshot = await getDocs(
-
+const querySnapshot =
+await getDocs(
 collection(db, "projects")
-
 );
 
-
-
-const container = document.getElementById("projects");
+const container =
+document.getElementById("projects");
 
 container.innerHTML = "";
 
-
-
 querySnapshot.forEach((doc) => {
 
-const div = document.createElement("div");
+const div =
+document.createElement("div");
 
 div.className = "project";
 
-
-
 div.innerHTML = `
-
 📄 ${doc.data().content}
-
 <br>
-
 <button onclick="launchProject()">
-
 🚀 Launch Project
-
 </button>
-
 `;
-
-
 
 container.appendChild(div);
 
@@ -254,9 +193,10 @@ container.appendChild(div);
 
 
 
-// Launch Project
+// Launch
 
-window.launchProject = function() {
+window.launchProject =
+function() {
 
 alert("🚀 سيتم إطلاق المشروع قريبًا");
 
@@ -264,7 +204,7 @@ alert("🚀 سيتم إطلاق المشروع قريبًا");
 
 
 
-// تحميل المشاريع عند فتح الصفحة
+// تحميل المشاريع عند الفتح
 
 loadProjects();
 
