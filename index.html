@@ -2,60 +2,62 @@
 <html lang="ar">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Nexora</title>
+<meta charset="UTF-8">
+
+<title>Nexora AI</title>
 
 <style>
 
 body {
 
 font-family: Arial;
-background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+
+background: #020617;
+
 color: white;
+
 text-align: center;
-padding: 40px;
 
-}
-
-h1 {
-
-font-size: 40px;
+padding: 30px;
 
 }
 
 button {
 
-background: linear-gradient(45deg,#3a7bd5,#00d2ff);
-border: none;
-padding: 15px 25px;
-margin: 10px;
-font-size: 18px;
+padding: 14px 24px;
+
 border-radius: 12px;
-color: white;
+
+border: none;
+
+font-size: 16px;
+
+margin: 10px;
+
 cursor: pointer;
 
 }
 
 input {
 
-padding: 12px;
-width: 80%;
-max-width: 400px;
+padding: 10px;
+
 border-radius: 10px;
-border: none;
-margin-top: 20px;
+
+margin: 5px;
 
 }
 
-#result {
+.card {
 
-margin-top: 30px;
-background: rgba(255,255,255,0.1);
+background: #0f172a;
+
 padding: 20px;
-border-radius: 12px;
-white-space: pre-line;
+
+border-radius: 15px;
+
+display: inline-block;
 
 }
 
@@ -65,44 +67,190 @@ white-space: pre-line;
 
 <body>
 
-<h1>🚀 Nexora</h1>
+<h1>🚀 Nexora AI</h1>
 
-<p>منصة بناء المشاريع بالذكاء الاصطناعي</p>
+<p>
 
+🔥 اشتراك Pro مجاني مؤقت  
+حتى يتم إطلاق المنصة رسميًا
 
-<!-- مربع الفكرة -->
-
-<input
-id="ideaInput"
-placeholder="اكتب فكرة مشروعك هنا..."
->
+</p>
 
 
-<br><br>
+<div class="card">
 
-<!-- الأزرار -->
+<h2>🔐 تسجيل الدخول</h2>
 
-<button id="generatePlan">
-📊 توليد خطة مشروع
+<input id="email"
+type="email"
+placeholder="البريد الإلكتروني">
+
+<br>
+
+<input id="password"
+type="password"
+placeholder="كلمة المرور">
+
+<br>
+
+<button id="loginBtn">
+
+تسجيل دخول
+
 </button>
 
-<button id="generateLogo">
-🎨 توليد شعار
+<button id="registerBtn">
+
+إنشاء حساب
+
 </button>
-
-
-<!-- النتيجة -->
-
-<div id="result">
-
-هنا ستظهر خطة المشروع...
 
 </div>
 
 
-<!-- ربط الجافاسكربت -->
+<script type="module">
 
-<script type="module" src="app.js"></script>
+import {
+
+initializeApp
+
+}
+
+from
+
+"https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+
+import {
+
+getAuth,
+
+signInWithEmailAndPassword,
+
+createUserWithEmailAndPassword
+
+}
+
+from
+
+"https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+
+
+
+// Firebase Config
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
+
+authDomain: "nexora-1c66b.firebaseapp.com",
+
+projectId: "nexora-1c66b",
+
+storageBucket: "nexora-1c66b.firebasestorage.app",
+
+messagingSenderId: "964700323381",
+
+appId: "1:964700323381:web:5826dd261cb062f401fb7c"
+
+};
+
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+
+
+// تسجيل دخول
+
+document
+
+.getElementById("loginBtn")
+
+.addEventListener("click",
+
+async () => {
+
+const email =
+
+document.getElementById("email").value;
+
+const password =
+
+document.getElementById("password").value;
+
+try {
+
+await signInWithEmailAndPassword(
+
+auth,
+
+email,
+
+password
+
+);
+
+window.location.href =
+
+"/dashboard.html";
+
+}
+
+catch (error) {
+
+alert(error.message);
+
+}
+
+});
+
+
+
+// إنشاء حساب
+
+document
+
+.getElementById("registerBtn")
+
+.addEventListener("click",
+
+async () => {
+
+const email =
+
+document.getElementById("email").value;
+
+const password =
+
+document.getElementById("password").value;
+
+try {
+
+await createUserWithEmailAndPassword(
+
+auth,
+
+email,
+
+password
+
+);
+
+alert("✅ تم إنشاء الحساب");
+
+}
+
+catch (error) {
+
+alert(error.message);
+
+}
+
+});
+
+</script>
 
 </body>
 
