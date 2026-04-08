@@ -1,64 +1,67 @@
 <!DOCTYPE html>
 <html lang="ar">
-
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Nexora AI</title>
 
 <style>
 
 body {
-
 font-family: Arial;
-
-background: #020617;
-
+background: #0b0f19;
 color: white;
-
 text-align: center;
-
-padding: 30px;
-
+padding: 20px;
 }
 
-button {
-
-padding: 14px 24px;
-
-border-radius: 12px;
-
-border: none;
-
-font-size: 16px;
-
-margin: 10px;
-
-cursor: pointer;
-
+.container {
+max-width: 500px;
+margin: auto;
+background: #111827;
+padding: 20px;
+border-radius: 15px;
+box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
 
 input {
-
+width: 90%;
 padding: 10px;
-
+margin: 8px 0;
 border-radius: 10px;
-
-margin: 5px;
-
+border: none;
 }
 
-.card {
+textarea {
+width: 95%;
+height: 120px;
+border-radius: 10px;
+padding: 10px;
+}
 
-background: #0f172a;
+button {
+padding: 10px 20px;
+margin: 8px;
+border: none;
+border-radius: 10px;
+background: #2563eb;
+color: white;
+font-size: 16px;
+cursor: pointer;
+}
 
-padding: 20px;
+button:hover {
+background: #1d4ed8;
+}
 
-border-radius: 15px;
-
-display: inline-block;
-
+#result {
+margin-top: 15px;
+background: #020617;
+padding: 10px;
+border-radius: 10px;
+white-space: pre-wrap;
 }
 
 </style>
@@ -67,76 +70,80 @@ display: inline-block;
 
 <body>
 
+<div class="container">
+
 <h1>🚀 Nexora AI</h1>
 
 <p>
-
-🔥 اشتراك Pro مجاني مؤقت  
-حتى يتم إطلاق المنصة رسميًا
-
+🔥 مجاني مؤقت حتى يتم إطلاق المنصة رسمياً
 </p>
-
-
-<div class="card">
 
 <h2>🔐 تسجيل الدخول</h2>
 
-<input id="email"
+<input
+id="email"
 type="email"
-placeholder="البريد الإلكتروني">
+placeholder="البريد الإلكتروني"
+/>
 
-<br>
-
-<input id="password"
+<input
+id="password"
 type="password"
-placeholder="كلمة المرور">
+placeholder="كلمة المرور"
+/>
 
 <br>
 
-<button id="loginBtn">
-
-تسجيل دخول
-
-</button>
-
-<button id="registerBtn">
-
+<button onclick="registerUser()">
 إنشاء حساب
-
 </button>
+
+<button onclick="loginUser()">
+تسجيل الدخول
+</button>
+
+<button onclick="logoutUser()">
+تسجيل الخروج
+</button>
+
+<hr>
+
+<h2>🧠 توليد خطة مشروع</h2>
+
+<textarea
+id="prompt"
+placeholder="اكتب فكرة مشروعك هنا..."
+></textarea>
+
+<br>
+
+<button onclick="generatePlan()">
+توليد خطة
+</button>
+
+<div id="result">
+ستظهر الخطة هنا...
+</div>
 
 </div>
 
+<!-- Firebase -->
 
 <script type="module">
 
-import {
-
-initializeApp
-
-}
-
-from
-
-"https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-
 getAuth,
-
+createUserWithEmailAndPassword,
 signInWithEmailAndPassword,
-
-createUserWithEmailAndPassword
-
+signOut
 }
-
-from
-
-"https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-
-// Firebase Config
+// إعدادات Firebase
 
 const firebaseConfig = {
 
@@ -155,87 +162,29 @@ appId: "1:964700323381:web:5826dd261cb062f401fb7c"
 };
 
 
+// تشغيل Firebase
 
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
 
-
-// تسجيل دخول
-
-document
-
-.getElementById("loginBtn")
-
-.addEventListener("click",
-
-async () => {
-
-const email =
-
-document.getElementById("email").value;
-
-const password =
-
-document.getElementById("password").value;
-
-try {
-
-await signInWithEmailAndPassword(
-
-auth,
-
-email,
-
-password
-
-);
-
-window.location.href =
-
-"/dashboard.html";
-
-}
-
-catch (error) {
-
-alert(error.message);
-
-}
-
-});
-
-
-
 // إنشاء حساب
 
-document
-
-.getElementById("registerBtn")
-
-.addEventListener("click",
-
-async () => {
+window.registerUser = async function () {
 
 const email =
-
 document.getElementById("email").value;
 
 const password =
-
 document.getElementById("password").value;
 
 try {
 
 await createUserWithEmailAndPassword(
-
 auth,
-
 email,
-
 password
-
 );
 
 alert("✅ تم إنشاء الحساب");
@@ -244,14 +193,113 @@ alert("✅ تم إنشاء الحساب");
 
 catch (error) {
 
-alert(error.message);
+alert("❌ " + error.message);
 
 }
 
+};
+
+
+// تسجيل دخول
+
+window.loginUser = async function () {
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+try {
+
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+alert("🚀 تم تسجيل الدخول");
+
+}
+
+catch (error) {
+
+alert("❌ " + error.message);
+
+}
+
+};
+
+
+// تسجيل خروج
+
+window.logoutUser = async function () {
+
+try {
+
+await signOut(auth);
+
+alert("👋 تم تسجيل الخروج");
+
+}
+
+catch (error) {
+
+alert("❌ " + error.message);
+
+}
+
+};
+
+
+// توليد خطة
+
+window.generatePlan = async function () {
+
+const prompt =
+document.getElementById("prompt").value;
+
+const resultDiv =
+document.getElementById("result");
+
+resultDiv.innerHTML =
+"⏳ جاري توليد الخطة...";
+
+try {
+
+const response =
+await fetch("/api/generate", {
+
+method: "POST",
+
+headers: {
+"Content-Type": "application/json"
+},
+
+body: JSON.stringify({
+prompt: prompt
+})
+
 });
 
-</script>
-<script type="module" src="firebase.js"></script>
-</body>
+const data =
+await response.json();
 
+resultDiv.innerHTML =
+data.result;
+
+}
+
+catch (error) {
+
+resultDiv.innerHTML =
+"❌ حدث خطأ أثناء توليد الخطة";
+
+}
+
+};
+
+</script>
+
+</body>
 </html>
