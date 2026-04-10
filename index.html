@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar">
+
 <head>
 
 <meta charset="UTF-8">
@@ -75,7 +76,7 @@ white-space: pre-wrap;
 <h1>🚀 Nexora AI</h1>
 
 <p>
-🔥 مجاني مؤقت حتى يتم إطلاق المنصة رسمياً
+🔥 اشتراك PRO مجاني مؤقت أثناء التطوير
 </p>
 
 <h2>🔐 تسجيل الدخول</h2>
@@ -118,7 +119,7 @@ placeholder="اكتب فكرة مشروعك هنا..."
 <br>
 
 <button onclick="generatePlan()">
-توليد خطة
+📊 توليد خطة
 </button>
 
 <div id="result">
@@ -126,8 +127,6 @@ placeholder="اكتب فكرة مشروعك هنا..."
 </div>
 
 </div>
-
-<!-- Firebase -->
 
 <script type="module">
 
@@ -143,7 +142,7 @@ signOut
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-// إعدادات Firebase
+// Firebase config
 
 const firebaseConfig = {
 
@@ -189,6 +188,10 @@ password
 
 alert("✅ تم إنشاء الحساب");
 
+// الانتقال إلى Dashboard
+window.location.href =
+"dashboard.html";
+
 }
 
 catch (error) {
@@ -219,6 +222,10 @@ password
 );
 
 alert("🚀 تم تسجيل الدخول");
+
+// الانتقال إلى Dashboard
+window.location.href =
+"dashboard.html";
 
 }
 
@@ -302,4 +309,5 @@ resultDiv.innerHTML =
 </script>
 
 </body>
+
 </html>
