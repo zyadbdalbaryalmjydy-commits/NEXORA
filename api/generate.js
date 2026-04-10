@@ -10,72 +10,39 @@ error: "Method not allowed"
 
 try {
 
-const { prompt, type } = req.body;
+const { prompt } = req.body;
 
 
+// توليد خطة مشروع
 
-// خطة مشروع
-
-if (type === "plan") {
-
-return res.status(200).json({
-
-result:
-
-`🚀 خطة مشروع:
+const result = `🚀 خطة مشروع:
 
 📌 الفكرة:
 ${prompt}
 
+🎯 الهدف:
+إنشاء مشروع ناجح يعتمد على هذه الفكرة.
+
 💰 نموذج الربح:
-اشتراك شهري
+اشتراك شهري أو بيع خدمات.
 
-📊 الخطوات:
+📊 خطوات التنفيذ:
 
-1- إنشاء MVP
-2- اختبار المستخدمين
-3- إطلاق رسمي
+1️⃣ دراسة الفكرة والسوق  
+2️⃣ إنشاء نموذج أولي MVP  
+3️⃣ اختبار المستخدمين  
+4️⃣ إطلاق المشروع رسمياً  
 
-`
+📢 نصيحة:
+ابدأ بسيط ثم طور المشروع تدريجياً.
 
-});
+`;
 
-}
-
-
-
-// شعار
-
-if (type === "logo") {
 
 return res.status(200).json({
 
-result:
-"🎨 سيتم إنشاء شعار AI قريبًا"
+result: result
 
-});
-
-}
-
-
-
-// موقع
-
-if (type === "website") {
-
-return res.status(200).json({
-
-result:
-"🌐 سيتم بناء موقع المشروع قريبًا"
-
-});
-
-}
-
-
-
-return res.status(400).json({
-error: "Unknown request"
 });
 
 }
