@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>لوحة التحكم - Nexora</title>
+<title>Nexora Dashboard</title>
 
 <style>
 
@@ -19,7 +19,7 @@ padding: 20px;
 }
 
 .container {
-max-width: 700px;
+max-width: 750px;
 margin: auto;
 background: #111827;
 padding: 20px;
@@ -52,6 +52,11 @@ border-radius: 10px;
 text-align: right;
 }
 
+.logo {
+margin-top: 15px;
+font-size: 40px;
+}
+
 </style>
 
 </head>
@@ -62,11 +67,7 @@ text-align: right;
 
 <h1>🚀 لوحة تحكم Nexora</h1>
 
-<p>
-هنا يمكنك إنشاء مشاريعك وإدارتها
-</p>
-
-<h2>🧠 فكرة مشروع</h2>
+<h2>🧠 فكرة المشروع</h2>
 
 <textarea
 id="projectIdea"
@@ -83,13 +84,35 @@ placeholder="اكتب فكرة مشروعك..."
 📊 توليد خطة
 </button>
 
+<button onclick="generateName()">
+🏷 توليد اسم شركة
+</button>
+
+<button onclick="generateLogo()">
+🎨 توليد شعار
+</button>
+
+<button onclick="launchProject()">
+🚀 Launch Project
+</button>
+
 <div id="result"></div>
+
+<div id="logoArea" class="logo"></div>
 
 <hr>
 
 <h2>📁 مشاريعك</h2>
 
 <div id="projectsList"></div>
+
+<hr>
+
+<h2>👤 Profile</h2>
+
+<div id="profileBox">
+البريد: غير متوفر
+</div>
 
 </div>
 
@@ -107,8 +130,12 @@ remove
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+import {
+getAuth,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Firebase config
 
 const firebaseConfig = {
 
@@ -132,13 +159,30 @@ appId:
 };
 
 
-// تشغيل Firebase
-
 const app =
 initializeApp(firebaseConfig);
 
 const db =
 getDatabase(app);
+
+const auth =
+getAuth(app);
+
+
+
+onAuthStateChanged(auth, (user) => {
+
+if (user) {
+
+document.getElementById(
+"profileBox"
+).innerHTML =
+"📧 البريد: " + user.email;
+
+}
+
+});
+
 
 
 // حفظ مشروع
@@ -170,6 +214,7 @@ document.getElementById(
 ).value = "";
 
 };
+
 
 
 // عرض المشاريع
@@ -218,6 +263,7 @@ list.appendChild(div);
 });
 
 
+
 // حذف مشروع
 
 window.deleteProject =
@@ -228,6 +274,7 @@ ref(db, "projects/" + id)
 );
 
 };
+
 
 
 // توليد خطة
@@ -282,9 +329,97 @@ data.result;
 catch (error) {
 
 resultDiv.innerHTML =
-"❌ حدث خطأ";
+"❌ خطأ بالتوليد";
 
 }
+
+};
+
+
+
+// توليد اسم شركة
+
+window.generateName =
+function () {
+
+const names = [
+
+"NexoraTech",
+
+"FlashCore",
+
+"SmartForge",
+
+"NovaBuild",
+
+"FutureStack",
+
+"InnovaHub"
+
+];
+
+const randomName =
+
+names[Math.floor(
+Math.random()
+* names.length
+)];
+
+document.getElementById(
+"result"
+).innerHTML =
+"🏷 اسم مقترح: "
++ randomName;
+
+};
+
+
+
+// توليد شعار
+
+window.generateLogo =
+function () {
+
+const logos = [
+
+"🚀",
+
+"⚡",
+
+"🧠",
+
+"🔥",
+
+"💡",
+
+"🌐"
+
+];
+
+const randomLogo =
+
+logos[Math.floor(
+Math.random()
+* logos.length
+)];
+
+document.getElementById(
+"logoArea"
+).innerHTML =
+randomLogo;
+
+};
+
+
+
+// Launch Project
+
+window.launchProject =
+function () {
+
+alert(
+"🚀 تم إطلاق المشروع بنجاح (نسخة تجريبية)"
+);
 
 };
 
