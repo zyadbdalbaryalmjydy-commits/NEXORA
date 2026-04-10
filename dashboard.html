@@ -4,57 +4,58 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Nexora Dashboard</title>
 
 <style>
 
 body {
+
 font-family: Arial;
-background: #0b0f19;
+background: #0f172a;
 color: white;
 text-align: center;
-padding: 20px;
+
 }
 
 .container {
-max-width: 750px;
-margin: auto;
-background: #111827;
-padding: 20px;
-border-radius: 15px;
+
+margin-top: 40px;
+
 }
 
-textarea {
-width: 95%;
-height: 120px;
-border-radius: 10px;
+input {
+
 padding: 10px;
-margin-top: 10px;
+width: 260px;
+border-radius: 8px;
+border: none;
+
 }
 
 button {
-padding: 10px 20px;
-margin: 8px;
-border-radius: 10px;
+
+padding: 10px 15px;
+margin: 5px;
 border: none;
-background: #2563eb;
-color: white;
+border-radius: 8px;
 cursor: pointer;
+
 }
 
 .project {
-background: #020617;
-margin-top: 10px;
+
+background: #1e293b;
 padding: 10px;
+margin: 10px;
 border-radius: 10px;
-text-align: right;
+
 }
 
-.logo {
-margin-top: 15px;
-font-size: 40px;
+#logoArea img {
+
+margin-top: 10px;
+
 }
 
 </style>
@@ -65,28 +66,226 @@ font-size: 40px;
 
 <div class="container">
 
-<h1>🚀 لوحة تحكم Nexora</h1>
+<h1>🚀 Nexora Dashboard</h1>
 
-<h2>🧠 فكرة المشروع</h2>
-
-<textarea
+<input
 id="projectIdea"
-placeholder="اكتب فكرة مشروعك..."
-></textarea>
+placeholder="اكتب فكرة مشروع"
+/>
 
-<br>
+<br><br>
 
-<button onclick="saveProject()">
-💾 حفظ المشروع
+<button onclick="generateName()">
+
+🔥 توليد اسم شركة
+
 </button>
 
 <button onclick="generatePlan()">
+
 📊 توليد خطة
+
 </button>
 
-<button onclick="generateName()">
-🏷 توليد اسم شركة
+<button onclick="generateLogo()">
+
+🎨 توليد شعار
+
 </button>
+
+<button onclick="saveProject()">
+
+💾 حفظ المشروع
+
+</button>
+
+<button onclick="launchProject()">
+
+🚀 Launch Project
+
+</button>
+
+<button onclick="goProfile()">
+
+👤 Profile
+
+</button>
+
+<br><br>
+
+<div id="nameResult"></div>
+
+<br>
+
+<div id="planResult"></div>
+
+<br>
+
+<div id="logoArea"></div>
+
+<h2>📁 مشاريعك</h2>
+
+<div id="projectsList"></div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+
+import {
+
+getDatabase,
+
+ref,
+
+push,
+
+onValue,
+
+remove
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+
+const firebaseConfig = {
+
+apiKey: "YOUR_API_KEY",
+
+authDomain: "nexora-1c66b.firebaseapp.com",
+
+databaseURL: "https://nexora-1c66b-default-rtdb.firebaseio.com",
+
+projectId: "nexora-1c66b",
+
+storageBucket: "nexora-1c66b.firebasestorage.app",
+
+messagingSenderId: "964700323381",
+
+appId: "1:964700323381:web:5826dd261cb062f401fb7c"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+window.generateName =
+async function () {
+
+const idea =
+document.getElementById(
+"projectIdea"
+).value;
+
+if (idea === "") {
+
+alert("اكتب فكرة");
+
+return;
+
+}
+
+const response =
+await fetch(
+"/api/name",
+{
+
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify({
+prompt: idea
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+document.getElementById(
+"nameResult"
+).innerHTML =
+
+"🏷️ الاسم: " +
+data.result;
+
+};
+
+window.generatePlan =
+async function () {
+
+const idea =
+document.getElementById(
+"projectIdea"
+).value;
+
+if (idea === "") {
+
+alert("اكتب فكرة");
+
+return;
+
+}
+
+document.getElementById(
+"planResult"
+).innerHTML =
+"⏳ جاري التوليد...";
+
+try {
+
+const response =
+await fetch(
+"/api/generate",
+{
+
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify({
+prompt: idea
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+document.getElementById(
+"planResult"
+).innerHTML =
+data.result;
+
+}
+
+catch {
+
+document.getElementById(
+"planResult"
+).innerHTML =
+"❌ خطأ";
+
+}
+
+};
 
 window.generateLogo =
 async function () {
@@ -98,7 +297,7 @@ document.getElementById(
 
 if (idea === "") {
 
-alert("اكتب اسم أو فكرة");
+alert("اكتب فكرة");
 
 return;
 
@@ -149,7 +348,7 @@ width="200"
 
 }
 
-catch (error) {
+catch {
 
 logoDiv.innerHTML =
 "❌ خطأ في الشعار";
@@ -158,102 +357,8 @@ logoDiv.innerHTML =
 
 };
 
-<button onclick="launchProject()">
-🚀 Launch Project
-</button>
-
-<div id="result"></div>
-
-<div id="logoArea" class="logo"></div>
-
-<hr>
-
-<h2>📁 مشاريعك</h2>
-
-<div id="projectsList"></div>
-
-<hr>
-
-<h2>👤 Profile</h2>
-
-<div id="profileBox">
-البريد: غير متوفر
-</div>
-
-</div>
-
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getDatabase,
-ref,
-push,
-onValue,
-remove
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-import {
-getAuth,
-onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
-
-authDomain: "nexora-1c66b.firebaseapp.com",
-
-databaseURL:
-"https://nexora-1c66b-default-rtdb.firebaseio.com",
-
-projectId: "nexora-1c66b",
-
-storageBucket:
-"nexora-1c66b.firebasestorage.app",
-
-messagingSenderId: "964700323381",
-
-appId:
-"1:964700323381:web:5826dd261cb062f401fb7c"
-
-};
-
-
-const app =
-initializeApp(firebaseConfig);
-
-const db =
-getDatabase(app);
-
-const auth =
-getAuth(app);
-
-
-
-onAuthStateChanged(auth, (user) => {
-
-if (user) {
-
-document.getElementById(
-"profileBox"
-).innerHTML =
-"📧 البريد: " + user.email;
-
-}
-
-});
-
-
-
-// حفظ مشروع
-
-window.saveProject = function () {
+window.saveProject =
+function () {
 
 const idea =
 document.getElementById(
@@ -262,33 +367,96 @@ document.getElementById(
 
 if (idea === "") {
 
-alert("اكتب فكرة أولاً");
+alert("اكتب فكرة");
 
 return;
+
+}
+
+const logoImage =
+document.querySelector(
+"#logoArea img"
+);
+
+let logoUrl = "";
+
+if (logoImage) {
+
+logoUrl = logoImage.src;
 
 }
 
 push(
 ref(db, "projects"),
 {
-idea: idea
+
+idea: idea,
+
+logo: logoUrl
+
 }
+
 );
 
-document.getElementById(
-"projectIdea"
-).value = "";
+alert("تم حفظ المشروع");
 
 };
 
+window.launchProject =
+function () {
 
+alert(
+"🚀 سيتم إطلاق المشروع قريبًا"
+);
 
-// عرض المشاريع
+};
+
+window.goProfile =
+function () {
+
+window.location.href =
+"profile.html";
+
+};
+
+window.downloadLogo =
+function (url) {
+
+if (!url) {
+
+alert("لا يوجد شعار");
+
+return;
+
+}
+
+const link =
+document.createElement("a");
+
+link.href = url;
+
+link.download = "logo.png";
+
+link.click();
+
+};
+
+window.deleteProject =
+function (id) {
+
+remove(
+ref(db, "projects/" + id)
+);
+
+};
 
 const projectsRef =
 ref(db, "projects");
 
-onValue(projectsRef, (snapshot) => {
+onValue(
+projectsRef,
+
+(snapshot) => {
 
 const data =
 snapshot.val();
@@ -303,21 +471,38 @@ list.innerHTML = "";
 for (let id in data) {
 
 const div =
-document.createElement("div");
+document.createElement(
+"div"
+);
 
 div.className =
 "project";
 
 div.innerHTML = `
 
-${data[id].idea}
+<b>${data[id].idea}</b>
 
 <br>
+
+${data[id].logo
+? `<img src="${data[id].logo}" width="120"><br>`
+: ""
+}
+
+<button
+onclick="downloadLogo('${data[id].logo}')"
+>
+
+⬇ تحميل الشعار
+
+</button>
 
 <button
 onclick="deleteProject('${id}')"
 >
+
 🗑 حذف
+
 </button>
 
 `;
@@ -326,168 +511,9 @@ list.appendChild(div);
 
 }
 
-});
-
-
-
-// حذف مشروع
-
-window.deleteProject =
-function (id) {
-
-remove(
-ref(db, "projects/" + id)
-);
-
-};
-
-
-
-// توليد خطة
-
-window.generatePlan =
-async function () {
-
-const idea =
-document.getElementById(
-"projectIdea"
-).value;
-
-const resultDiv =
-document.getElementById(
-"result"
-);
-
-resultDiv.innerHTML =
-"⏳ جاري التوليد...";
-
-try {
-
-const response =
-await fetch(
-"/api/generate",
-{
-
-method: "POST",
-
-headers: {
-"Content-Type":
-"application/json"
-},
-
-body:
-JSON.stringify({
-prompt: idea
-})
-
 }
 
 );
-
-const data =
-await response.json();
-
-resultDiv.innerHTML =
-data.result;
-
-}
-
-catch (error) {
-
-resultDiv.innerHTML =
-"❌ خطأ بالتوليد";
-
-}
-
-};
-
-
-
-// توليد اسم شركة
-
-window.generateName =
-function () {
-
-const names = [
-
-"NexoraTech",
-
-"FlashCore",
-
-"SmartForge",
-
-"NovaBuild",
-
-"FutureStack",
-
-"InnovaHub"
-
-];
-
-const randomName =
-
-names[Math.floor(
-Math.random()
-* names.length
-)];
-
-document.getElementById(
-"result"
-).innerHTML =
-"🏷 اسم مقترح: "
-+ randomName;
-
-};
-
-
-
-// توليد شعار
-
-window.generateLogo =
-function () {
-
-const logos = [
-
-"🚀",
-
-"⚡",
-
-"🧠",
-
-"🔥",
-
-"💡",
-
-"🌐"
-
-];
-
-const randomLogo =
-
-logos[Math.floor(
-Math.random()
-* logos.length
-)];
-
-document.getElementById(
-"logoArea"
-).innerHTML =
-randomLogo;
-
-};
-
-
-
-// Launch Project
-
-window.launchProject =
-function () {
-
-alert(
-"🚀 تم إطلاق المشروع بنجاح (نسخة تجريبية)"
-);
-
-};
 
 </script>
 
