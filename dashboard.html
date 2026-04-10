@@ -4,8 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Nexora Dashboard</title>
+<title>لوحة التحكم - Nexora</title>
 
 <style>
 
@@ -17,27 +18,38 @@ text-align: center;
 padding: 20px;
 }
 
+.container {
+max-width: 700px;
+margin: auto;
+background: #111827;
+padding: 20px;
+border-radius: 15px;
+}
+
 textarea {
-width: 90%;
+width: 95%;
 height: 120px;
 border-radius: 10px;
 padding: 10px;
+margin-top: 10px;
 }
 
 button {
 padding: 10px 20px;
 margin: 8px;
 border-radius: 10px;
+border: none;
 background: #2563eb;
 color: white;
-border: none;
+cursor: pointer;
 }
 
 .project {
-background: #111827;
+background: #020617;
+margin-top: 10px;
 padding: 10px;
-margin: 10px;
 border-radius: 10px;
+text-align: right;
 }
 
 </style>
@@ -46,10 +58,18 @@ border-radius: 10px;
 
 <body>
 
-<h1>🚀 Nexora Dashboard</h1>
+<div class="container">
+
+<h1>🚀 لوحة تحكم Nexora</h1>
+
+<p>
+هنا يمكنك إنشاء مشاريعك وإدارتها
+</p>
+
+<h2>🧠 فكرة مشروع</h2>
 
 <textarea
-id="idea"
+id="projectIdea"
 placeholder="اكتب فكرة مشروعك..."
 ></textarea>
 
@@ -59,9 +79,19 @@ placeholder="اكتب فكرة مشروعك..."
 💾 حفظ المشروع
 </button>
 
-<h2>📁 المشاريع</h2>
+<button onclick="generatePlan()">
+📊 توليد خطة
+</button>
 
-<div id="projects"></div>
+<div id="result"></div>
+
+<hr>
+
+<h2>📁 مشاريعك</h2>
+
+<div id="projectsList"></div>
+
+</div>
 
 <script type="module">
 
@@ -69,12 +99,13 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-getFirestore,
-collection,
-addDoc,
-getDocs
+getDatabase,
+ref,
+push,
+onValue,
+remove
 }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
 // Firebase config
@@ -85,75 +116,177 @@ apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
 
 authDomain: "nexora-1c66b.firebaseapp.com",
 
+databaseURL:
+"https://nexora-1c66b-default-rtdb.firebaseio.com",
+
 projectId: "nexora-1c66b",
 
-storageBucket: "nexora-1c66b.firebasestorage.app",
+storageBucket:
+"nexora-1c66b.firebasestorage.app",
 
 messagingSenderId: "964700323381",
 
-appId: "1:964700323381:web:5826dd261cb062f401fb7c"
+appId:
+"1:964700323381:web:5826dd261cb062f401fb7c"
 
 };
 
 
-const app = initializeApp(firebaseConfig);
+// تشغيل Firebase
 
-const db = getFirestore(app);
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getDatabase(app);
 
 
 // حفظ مشروع
 
-window.saveProject = async function () {
+window.saveProject = function () {
 
 const idea =
-document.getElementById("idea").value;
+document.getElementById(
+"projectIdea"
+).value;
 
-await addDoc(
-collection(db, "projects"),
+if (idea === "") {
+
+alert("اكتب فكرة أولاً");
+
+return;
+
+}
+
+push(
+ref(db, "projects"),
 {
 idea: idea
 }
 );
 
-alert("✅ تم حفظ المشروع");
-
-loadProjects();
+document.getElementById(
+"projectIdea"
+).value = "";
 
 };
 
 
-// تحميل المشاريع
+// عرض المشاريع
 
-async function loadProjects() {
+const projectsRef =
+ref(db, "projects");
 
-const querySnapshot =
-await getDocs(
-collection(db, "projects")
+onValue(projectsRef, (snapshot) => {
+
+const data =
+snapshot.val();
+
+const list =
+document.getElementById(
+"projectsList"
 );
 
-const container =
-document.getElementById("projects");
+list.innerHTML = "";
 
-container.innerHTML = "";
-
-querySnapshot.forEach((doc) => {
+for (let id in data) {
 
 const div =
 document.createElement("div");
 
-div.className = "project";
+div.className =
+"project";
 
-div.innerHTML =
-doc.data().idea;
+div.innerHTML = `
 
-container.appendChild(div);
+${data[id].idea}
 
-});
+<br>
+
+<button
+onclick="deleteProject('${id}')"
+>
+🗑 حذف
+</button>
+
+`;
+
+list.appendChild(div);
 
 }
 
+});
 
-loadProjects();
+
+// حذف مشروع
+
+window.deleteProject =
+function (id) {
+
+remove(
+ref(db, "projects/" + id)
+);
+
+};
+
+
+// توليد خطة
+
+window.generatePlan =
+async function () {
+
+const idea =
+document.getElementById(
+"projectIdea"
+).value;
+
+const resultDiv =
+document.getElementById(
+"result"
+);
+
+resultDiv.innerHTML =
+"⏳ جاري التوليد...";
+
+try {
+
+const response =
+await fetch(
+"/api/generate",
+{
+
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify({
+prompt: idea
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+resultDiv.innerHTML =
+data.result;
+
+}
+
+catch (error) {
+
+resultDiv.innerHTML =
+"❌ حدث خطأ";
+
+}
+
+};
 
 </script>
 
