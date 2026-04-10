@@ -88,9 +88,75 @@ placeholder="اكتب فكرة مشروعك..."
 🏷 توليد اسم شركة
 </button>
 
-<button onclick="generateLogo()">
-🎨 توليد شعار
-</button>
+window.generateLogo =
+async function () {
+
+const idea =
+document.getElementById(
+"projectIdea"
+).value;
+
+if (idea === "") {
+
+alert("اكتب اسم أو فكرة");
+
+return;
+
+}
+
+const logoDiv =
+document.getElementById(
+"logoArea"
+);
+
+logoDiv.innerHTML =
+"⏳ جاري توليد الشعار...";
+
+try {
+
+const response =
+await fetch(
+"/api/logo",
+{
+
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify({
+name: idea
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+logoDiv.innerHTML = `
+
+<img
+src="${data.logo}"
+width="200"
+/>
+
+`;
+
+}
+
+catch (error) {
+
+logoDiv.innerHTML =
+"❌ خطأ في الشعار";
+
+}
+
+};
 
 <button onclick="launchProject()">
 🚀 Launch Project
