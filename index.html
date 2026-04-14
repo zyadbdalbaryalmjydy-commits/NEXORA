@@ -322,7 +322,53 @@ resultDiv.innerHTML =
 }
 
 };
+// توليد خطة مشروع
 
+window.generatePlan = async function () {
+
+const prompt =
+document.getElementById("prompt").value;
+
+const resultDiv =
+document.getElementById("result");
+
+resultDiv.innerHTML =
+"⏳ جاري توليد الخطة...";
+
+try {
+
+const response =
+await fetch("/api/generate", {
+
+method: "POST",
+
+headers: {
+"Content-Type": "application/json"
+},
+
+body: JSON.stringify({
+prompt: prompt,
+type: "plan"
+})
+
+});
+
+const data =
+await response.json();
+
+resultDiv.innerHTML =
+data.result;
+
+}
+
+catch (error) {
+
+resultDiv.innerHTML =
+"❌ حدث خطأ أثناء توليد الخطة";
+
+}
+
+};
 </script>
 
 </body>
