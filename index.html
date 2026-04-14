@@ -6,63 +6,85 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Nexora AI</title>
+<title>Nexora</title>
 
 <style>
 
 body {
+
 font-family: Arial;
-background: #0b0f19;
-color: white;
+direction: rtl;
 text-align: center;
+
+background: #0f172a;
+color: white;
+
+margin: 0;
 padding: 20px;
+
 }
 
 .container {
-max-width: 500px;
+
+max-width: 700px;
 margin: auto;
-background: #111827;
-padding: 20px;
-border-radius: 15px;
-box-shadow: 0 0 15px rgba(0,0,0,0.5);
+
 }
 
-input {
-width: 90%;
+input, textarea {
+
+width: 100%;
 padding: 10px;
-margin: 8px 0;
+
+margin: 10px 0;
+
 border-radius: 10px;
 border: none;
-}
 
-textarea {
-width: 95%;
-height: 120px;
-border-radius: 10px;
-padding: 10px;
 }
 
 button {
+
 padding: 10px 20px;
-margin: 8px;
+margin: 5px;
+
+border-radius: 10px;
 border: none;
-border-radius: 10px;
-background: #2563eb;
-color: white;
-font-size: 16px;
+
 cursor: pointer;
+
+background: #22c55e;
+color: white;
+
+font-size: 16px;
+
 }
 
-button:hover {
-background: #1d4ed8;
-}
+#result,
+#projects {
 
-#result {
-margin-top: 15px;
-background: #020617;
-padding: 10px;
+margin-top: 20px;
+
+background: #1e293b;
+
+padding: 15px;
+
 border-radius: 10px;
+
 white-space: pre-wrap;
+
+}
+
+.project-box {
+
+border: 1px solid #334155;
+
+padding: 10px;
+
+margin: 10px 0;
+
+border-radius: 10px;
+
 }
 
 </style>
@@ -73,13 +95,11 @@ white-space: pre-wrap;
 
 <div class="container">
 
-<h1>🚀 Nexora AI</h1>
+<h1>🚀 Nexora</h1>
 
 <p>
-🔥 اشتراك PRO مجاني مؤقت أثناء التطوير
+منصة إنشاء المشاريع بالذكاء الاصطناعي
 </p>
-
-<h2>🔐 تسجيل الدخول</h2>
 
 <input
 id="email"
@@ -93,55 +113,33 @@ type="password"
 placeholder="كلمة المرور"
 />
 
-<br>
-
-<button onclick="registerUser()">
-إنشاء حساب
+<button onclick="register()">
+🆕 إنشاء حساب
 </button>
 
-<button onclick="loginUser()">
-تسجيل الدخول
-</button>
-
-<button onclick="logoutUser()">
-تسجيل الخروج
+<button onclick="login()">
+🔑 تسجيل دخول
 </button>
 
 <hr>
-
-<h2>🧠 توليد خطة مشروع</h2>
 
 <textarea
 id="prompt"
+rows="4"
 placeholder="اكتب فكرة مشروعك هنا..."
 ></textarea>
 
-<br>
-<hr>
-
-<h2>🎨 توليد شعار</h2>
-
-<input
-id="logoPrompt"
-placeholder="اكتب اسم مشروعك لتوليد شعار"
-/>
-
-<br>
-
-<button onclick="generateLogo()">
-توليد شعار
-</button>
-
-<div id="logoResult">
-سيظهر الشعار هنا...
-</div>
 <button onclick="generatePlan()">
-📊 توليد خطة
+📋 توليد خطة
 </button>
 
-<div id="result">
-ستظهر الخطة هنا...
-</div>
+<button onclick="loadProjects()">
+📂 عرض مشاريعي
+</button>
+
+<div id="result"></div>
+
+<div id="projects"></div>
 
 </div>
 
@@ -153,13 +151,17 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
 getAuth,
 createUserWithEmailAndPassword,
-signInWithEmailAndPassword,
-signOut
+signInWithEmailAndPassword
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-
-// Firebase config
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
 
@@ -167,27 +169,37 @@ apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
 
 authDomain: "nexora-1c66b.firebaseapp.com",
 
+databaseURL:
+"https://nexora-1c66b-default-rtdb.firebaseio.com",
+
 projectId: "nexora-1c66b",
 
-storageBucket: "nexora-1c66b.firebasestorage.app",
+storageBucket:
+"nexora-1c66b.firebasestorage.app",
 
 messagingSenderId: "964700323381",
 
-appId: "1:964700323381:web:5826dd261cb062f401fb7c"
+appId:
+"1:964700323381:web:5826dd261cb062f401fb7c",
+
+measurementId: "G-HVC60XSN6D"
 
 };
 
+const app =
+initializeApp(firebaseConfig);
 
-// تشغيل Firebase
+const auth =
+getAuth(app);
 
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
+const db =
+getFirestore(app);
 
 
 // إنشاء حساب
 
-window.registerUser = async function () {
+window.register =
+async function () {
 
 const email =
 document.getElementById("email").value;
@@ -205,15 +217,11 @@ password
 
 alert("✅ تم إنشاء الحساب");
 
-// الانتقال إلى Dashboard
-window.location.href =
-"dashboard.html";
-
 }
 
 catch (error) {
 
-alert("❌ " + error.message);
+alert(error.message);
 
 }
 
@@ -222,7 +230,8 @@ alert("❌ " + error.message);
 
 // تسجيل دخول
 
-window.loginUser = async function () {
+window.login =
+async function () {
 
 const email =
 document.getElementById("email").value;
@@ -238,38 +247,13 @@ email,
 password
 );
 
-alert("🚀 تم تسجيل الدخول");
-
-// الانتقال إلى Dashboard
-window.location.href =
-"dashboard.html";
+alert("✅ تم تسجيل الدخول");
 
 }
 
 catch (error) {
 
-alert("❌ " + error.message);
-
-}
-
-};
-
-
-// تسجيل خروج
-
-window.logoutUser = async function () {
-
-try {
-
-await signOut(auth);
-
-alert("👋 تم تسجيل الخروج");
-
-}
-
-catch (error) {
-
-alert("❌ " + error.message);
+alert(error.message);
 
 }
 
@@ -278,7 +262,8 @@ alert("❌ " + error.message);
 
 // توليد خطة
 
-window.generatePlan = async function () {
+window.generatePlan =
+async function () {
 
 const prompt =
 document.getElementById("prompt").value;
@@ -301,54 +286,10 @@ headers: {
 },
 
 body: JSON.stringify({
-prompt: prompt
-})
 
-});
-
-const data =
-await response.json();
-
-resultDiv.innerHTML =
-data.result;
-
-}
-
-catch (error) {
-
-resultDiv.innerHTML =
-"❌ حدث خطأ أثناء توليد الخطة";
-
-}
-
-};
-// توليد خطة مشروع
-
-window.generatePlan = async function () {
-
-const prompt =
-document.getElementById("prompt").value;
-
-const resultDiv =
-document.getElementById("result");
-
-resultDiv.innerHTML =
-"⏳ جاري توليد الخطة...";
-
-try {
-
-const response =
-await fetch("/api/generate", {
-
-method: "POST",
-
-headers: {
-"Content-Type": "application/json"
-},
-
-body: JSON.stringify({
 prompt: prompt,
 type: "plan"
+
 })
 
 });
@@ -358,6 +299,24 @@ await response.json();
 
 resultDiv.innerHTML =
 data.result;
+
+
+// حفظ المشروع
+
+await addDoc(
+collection(db, "projects"),
+{
+
+idea: prompt,
+
+result: data.result,
+
+createdAt:
+new Date()
+
+}
+
+);
 
 }
 
@@ -369,6 +328,68 @@ resultDiv.innerHTML =
 }
 
 };
+
+
+// عرض المشاريع
+
+window.loadProjects =
+async function () {
+
+const projectsDiv =
+document.getElementById("projects");
+
+projectsDiv.innerHTML =
+"⏳ جاري تحميل المشاريع...";
+
+try {
+
+const querySnapshot =
+await getDocs(
+collection(db, "projects")
+);
+
+let html = "";
+
+querySnapshot.forEach((doc) => {
+
+const data = doc.data();
+
+html += `
+
+<div class="project-box">
+
+<h3>📌 الفكرة:</h3>
+
+<p>
+${data.idea}
+</p>
+
+<h3>🚀 الخطة:</h3>
+
+<pre>
+${data.result}
+</pre>
+
+</div>
+
+`;
+
+});
+
+projectsDiv.innerHTML =
+html;
+
+}
+
+catch (error) {
+
+projectsDiv.innerHTML =
+"❌ حدث خطأ أثناء تحميل المشاريع";
+
+}
+
+};
+
 </script>
 
 </body>
