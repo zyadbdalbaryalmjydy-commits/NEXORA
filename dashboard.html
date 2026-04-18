@@ -4,7 +4,6 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Nexora Dashboard</title>
 
@@ -13,95 +12,54 @@
 body {
 
 font-family: Arial;
-direction: rtl;
 
-background: #0f172a;
-color: white;
+background:#020617;
 
-margin: 0;
-padding: 20px;
+color:white;
 
-}
+text-align:center;
 
-.container {
-
-max-width: 900px;
-margin: auto;
-
-}
-
-h1 {
-
-text-align: center;
+padding:40px;
 
 }
 
 textarea {
 
-width: 100%;
-padding: 12px;
+width:80%;
 
-border-radius: 10px;
+height:120px;
 
-margin-top: 10px;
+padding:10px;
 
-border: none;
+border-radius:10px;
+
+border:none;
 
 }
 
 button {
 
-padding: 10px 20px;
+padding:12px;
 
-margin-top: 10px;
+margin:10px;
 
-border-radius: 10px;
+border:none;
 
-border: none;
+border-radius:10px;
 
-cursor: pointer;
+background:#3b82f6;
 
-background: #22c55e;
+color:white;
 
-color: white;
+font-size:16px;
 
-margin-left: 5px;
-
-}
-
-.project-box {
-
-background: #1e293b;
-
-padding: 15px;
-
-margin-top: 15px;
-
-border-radius: 10px;
+cursor:pointer;
 
 }
 
-.actions button {
+button:hover {
 
-margin-top: 10px;
-
-}
-
-.top-bar {
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-margin-bottom: 20px;
-
-}
-
-.logout-btn {
-
-background: #ef4444;
+background:#2563eb;
 
 }
 
@@ -111,131 +69,51 @@ background: #ef4444;
 
 <body>
 
-<div class="container">
+<h1>
 
-<div class="top-bar">
+🚀 Nexora AI
 
-<h1>🚀 Nexora Dashboard</h1>
-
-<button
-class="logout-btn"
-onclick="logout()"
->
-
-🚪 تسجيل خروج
-
-</button>
-
-</div>
-
+</h1>
 
 <textarea
+
 id="prompt"
-rows="4"
+
 placeholder="اكتب فكرة مشروعك هنا..."
+
 ></textarea>
+
+<br>
 
 <button onclick="generatePlan()">
 
-📋 توليد خطة
+📋 توليد خطة مشروع
 
 </button>
 
-<button onclick="loadProjects()">
+<button onclick="generateNames()">
 
-📂 عرض مشاريعي
+🧠 توليد أسماء
 
 </button>
 
+<button onclick="generateIdeas()">
 
-<div id="projects"></div>
+💡 توليد أفكار
 
-</div>
+</button>
 
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getAuth,
-signOut
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import {
-getFirestore,
-collection,
-addDoc,
-getDocs,
-deleteDoc,
-updateDoc,
-doc,
-query,
-where
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-// Firebase config
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
-
-authDomain: "nexora-1c66b.firebaseapp.com",
-
-projectId: "nexora-1c66b",
-
-storageBucket:
-"nexora-1c66b.firebasestorage.app",
-
-messagingSenderId: "964700323381",
-
-appId:
-"1:964700323381:web:5826dd261cb062f401fb7c"
-
-};
-
-
-// Initialize Firebase
-
-const app =
-initializeApp(firebaseConfig);
-
-const auth =
-getAuth(app);
-
-const db =
-getFirestore(app);
-
-
-// تسجيل خروج
-
-window.logout =
-async function () {
-
-await signOut(auth);
-
-alert("✅ تم تسجيل الخروج");
-
-window.location.href =
-"index.html";
-
-};
-
-
-// توليد خطة
+<script>
 
 window.generatePlan =
-async function () {
+async function() {
 
 const prompt =
 document.getElementById("prompt").value;
 
 if (!prompt) {
 
-alert("اكتب فكرة أولاً");
+alert("اكتب فكرة");
 
 return;
 
@@ -243,13 +121,15 @@ return;
 
 try {
 
-const response =
+const res =
 await fetch("/api/generate", {
 
-method: "POST",
+method:"POST",
 
 headers: {
-"Content-Type": "application/json"
+
+"Content-Type":"application/json"
+
 },
 
 body: JSON.stringify({
@@ -261,175 +141,130 @@ prompt: prompt
 });
 
 const data =
-await response.json();
+await res.json();
 
-await addDoc(
-collection(db, "projects"),
-{
+alert(
 
-idea: prompt,
-
-result: data.result,
-
-userId:
-auth.currentUser.uid,
-
-createdAt:
-new Date()
-
-}
+"📋 خطة المشروع:\n\n" +
+data.result
 
 );
 
-alert("✅ تم إنشاء المشروع");
-
-loadProjects();
-
 }
 
-catch (error) {
+catch {
 
-alert("❌ حدث خطأ");
+alert("خطأ");
 
 }
 
 };
 
+window.generateNames =
+async function() {
 
-// عرض المشاريع
+const prompt =
+document.getElementById("prompt").value;
 
-window.loadProjects =
-async function () {
+if (!prompt) {
 
-const projectsDiv =
-document.getElementById("projects");
+alert("اكتب فكرة");
 
-const q = query(
-collection(db, "projects"),
-where(
-"userId",
-"==",
-auth.currentUser.uid
-)
-);
+return;
 
-const querySnapshot =
-await getDocs(q);
+}
 
-let html = "";
+try {
 
-querySnapshot.forEach((document) => {
+const res =
+await fetch("/api/names", {
 
-const data =
-document.data();
+method:"POST",
 
-const id =
-document.id;
+headers: {
 
-html += `
+"Content-Type":"application/json"
 
-<div class="project-box">
+},
 
-<h3>📌 الفكرة:</h3>
+body: JSON.stringify({
 
-<p>
-${data.idea}
-</p>
+prompt: prompt
 
-<h3>🚀 الخطة:</h3>
-
-<pre>
-${data.result}
-</pre>
-
-<div class="actions">
-
-<button onclick="editProject('${id}', '${data.idea}')">
-
-✏️ تعديل
-
-</button>
-
-<button onclick="deleteProject('${id}')">
-
-🗑️ حذف
-
-</button>
-
-</div>
-
-</div>
-
-`;
+})
 
 });
 
-projectsDiv.innerHTML =
-html;
+const data =
+await res.json();
 
-};
+alert(
 
+"🧠 أسماء مقترحة:\n\n" +
+data.names
 
-// حذف مشروع
-
-window.deleteProject =
-async function (id) {
-
-try {
-
-await deleteDoc(
-doc(db, "projects", id)
 );
-
-alert("🗑️ تم حذف المشروع");
-
-loadProjects();
 
 }
 
-catch (error) {
+catch {
 
-alert("❌ فشل الحذف");
+alert("خطأ");
 
 }
 
 };
 
+window.generateIdeas =
+async function() {
 
-// تعديل مشروع
+const prompt =
+document.getElementById("prompt").value;
 
-window.editProject =
-async function (id, oldIdea) {
+if (!prompt) {
 
-const newIdea =
-prompt(
-"✏️ عدل فكرة المشروع:",
-oldIdea
-);
+alert("اكتب فكرة");
 
-if (!newIdea) return;
+return;
+
+}
 
 try {
 
-await updateDoc(
-doc(db, "projects", id),
-{
+const res =
+await fetch("/api/ideas", {
 
-idea: newIdea
+method:"POST",
 
-}
+headers: {
+
+"Content-Type":"application/json"
+
+},
+
+body: JSON.stringify({
+
+prompt: prompt
+
+})
+
+});
+
+const data =
+await res.json();
+
+alert(
+
+"💡 أفكار:\n\n" +
+data.ideas
 
 );
 
-alert("✅ تم التعديل");
-
-loadProjects();
-
 }
 
-catch (error) {
+catch {
 
-alert("❌ فشل التعديل");
+alert("خطأ");
 
 }
 
