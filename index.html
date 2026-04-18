@@ -1,102 +1,34 @@
 <!DOCTYPE html>
 <html lang="ar">
+
 <head>
 
 <meta charset="UTF-8">
+<title>Nexora Login</title>
 
-<title>Nexora | تسجيل الدخول</title>
-
-<style>
-
-body {
-
-font-family: Arial;
-background: linear-gradient(135deg,#0f172a,#1e293b);
-color:white;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-height:100vh;
-
-}
-
-.box {
-
-background:#111827;
-
-padding:30px;
-
-border-radius:15px;
-
-width:300px;
-
-text-align:center;
-
-}
-
-input {
-
-width:100%;
-
-padding:10px;
-
-margin:10px 0;
-
-border-radius:8px;
-
-border:none;
-
-}
-
-button {
-
-width:100%;
-
-padding:10px;
-
-background:#22c55e;
-
-border:none;
-
-border-radius:8px;
-
-color:white;
-
-font-size:16px;
-
-cursor:pointer;
-
-}
-
-button:hover {
-
-background:#16a34a;
-
-}
-
-</style>
+<link rel="stylesheet" href="styles.css">
 
 </head>
 
 <body>
 
-<div class="box">
+<div class="login-box">
 
-<h2>Nexora</h2>
+<h1>🚀 Nexora</h1>
 
 <input id="email" placeholder="Email">
 
-<input id="password" type="password" placeholder="Password">
+<input
+id="password"
+type="password"
+placeholder="Password"
+>
 
 <button onclick="login()">
 
-دخول
+تسجيل دخول
 
 </button>
-
-<br><br>
 
 <button onclick="register()">
 
@@ -108,121 +40,71 @@ background:#16a34a;
 
 <script type="module">
 
-import {
-
-initializeApp
-
-}
-
-from
-
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
 
 getAuth,
-
 signInWithEmailAndPassword,
-
 createUserWithEmailAndPassword
 
 }
 
-from
-
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
+apiKey: "YOUR_FIREBASE_KEY",
 
 authDomain: "nexora-1c66b.firebaseapp.com",
 
-databaseURL: "https://nexora-1c66b-default-rtdb.firebaseio.com",
-
 projectId: "nexora-1c66b",
 
-storageBucket: "nexora-1c66b.firebasestorage.app",
+storageBucket: "nexora-1c66b.appspot.com",
 
 messagingSenderId: "964700323381",
 
-appId: "1:964700323381:web:5826dd261cb062f401fb7c",
-
-measurementId: "G-HVC60XSN6D"
+appId: "1:964700323381:web:5826dd261cb062f401fb7c"
 
 };
 
-const app = initializeApp(firebaseConfig);
+const app =
+initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+const auth =
+getAuth(app);
 
-window.login = async function() {
+window.login = async function(){
 
 const email =
-
 document.getElementById("email").value;
 
 const password =
-
 document.getElementById("password").value;
 
-try {
-
 await signInWithEmailAndPassword(
-
-auth,
-
-email,
-
-password
-
+auth,email,password
 );
 
 window.location.href =
-
 "dashboard.html";
-
-}
-
-catch {
-
-alert("خطأ في تسجيل الدخول");
-
-}
 
 };
 
-window.register = async function() {
+window.register = async function(){
 
 const email =
-
 document.getElementById("email").value;
 
 const password =
-
 document.getElementById("password").value;
 
-try {
-
 await createUserWithEmailAndPassword(
-
-auth,
-
-email,
-
-password
-
+auth,email,password
 );
 
 alert("تم إنشاء الحساب");
-
-}
-
-catch {
-
-alert("خطأ في التسجيل");
-
-}
 
 };
 
