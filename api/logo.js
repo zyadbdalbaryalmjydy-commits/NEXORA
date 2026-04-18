@@ -1,37 +1,40 @@
-export default async function handler(req, res) {
+export default async function handler(req,res){
 
-if (req.method !== "POST") {
+const { prompt } = req.body;
 
-return res.status(405).json({
-error: "Method not allowed"
-});
+const response = await fetch(
+"https://api.openai.com/v1/images/generations",
+{
+method:"POST",
 
-}
+headers:{
+"Content-Type":"application/json",
+"Authorization":
+"Bearer " + process.env.OPENAI_API_KEY
+},
 
-try {
+body: JSON.stringify({
 
-const { name } = req.body;
+model:"gpt-image-1",
 
-// شعار تجريبي (نسخة أولى)
+prompt:
+"Create modern logo for: " + prompt,
 
-const logoUrl =
-"https://dummyimage.com/300x150/2563eb/ffffff&text="
-+ encodeURIComponent(name);
+size:"512x512"
 
-return res.status(200).json({
-
-logo: logoUrl
-
-});
-
-}
-
-catch (error) {
-
-return res.status(500).json({
-error: "Logo error"
-});
+})
 
 }
+);
+
+const data =
+await response.json();
+
+res.status(200).json({
+
+logo:
+data.data[0].url
+
+});
 
 }
