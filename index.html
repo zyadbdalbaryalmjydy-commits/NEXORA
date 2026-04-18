@@ -1,85 +1,78 @@
 <!DOCTYPE html>
 <html lang="ar">
-
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Nexora</title>
+<title>Nexora | تسجيل الدخول</title>
 
 <style>
 
 body {
 
 font-family: Arial;
-direction: rtl;
+background: linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
 
-background: #0f172a;
-color: white;
+display:flex;
+justify-content:center;
+align-items:center;
 
-display: flex;
-justify-content: center;
-align-items: center;
-
-height: 100vh;
-margin: 0;
+height:100vh;
 
 }
 
-.container {
+.box {
 
-background: #1e293b;
+background:#111827;
 
-padding: 25px;
+padding:30px;
 
-border-radius: 15px;
+border-radius:15px;
 
-width: 300px;
+width:300px;
 
-text-align: center;
+text-align:center;
 
 }
 
 input {
 
-width: 100%;
+width:100%;
 
-padding: 10px;
+padding:10px;
 
-margin-top: 10px;
+margin:10px 0;
 
-border-radius: 10px;
+border-radius:8px;
 
-border: none;
+border:none;
 
 }
 
 button {
 
-width: 100%;
+width:100%;
 
-padding: 10px;
+padding:10px;
 
-margin-top: 10px;
+background:#22c55e;
 
-border-radius: 10px;
+border:none;
 
-border: none;
+border-radius:8px;
 
-cursor: pointer;
+color:white;
 
-background: #22c55e;
+font-size:16px;
 
-color: white;
-
-font-size: 15px;
+cursor:pointer;
 
 }
 
-h1 {
+button:hover {
 
-margin-bottom: 20px;
+background:#16a34a;
 
 }
 
@@ -89,47 +82,55 @@ margin-bottom: 20px;
 
 <body>
 
-<div class="container">
+<div class="box">
 
-<h1>🚀 Nexora</h1>
+<h2>Nexora</h2>
 
-<input
-type="email"
-id="email"
-placeholder="البريد الإلكتروني"
-/>
+<input id="email" placeholder="Email">
 
-<input
-type="password"
-id="password"
-placeholder="كلمة المرور"
-/>
-
-<button onclick="register()">
-🆕 إنشاء حساب
-</button>
+<input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">
-🔐 تسجيل دخول
+
+دخول
+
+</button>
+
+<br><br>
+
+<button onclick="register()">
+
+إنشاء حساب
+
 </button>
 
 </div>
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+
+initializeApp
+
+}
+
+from
+
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
+
 getAuth,
-createUserWithEmailAndPassword,
+
 signInWithEmailAndPassword,
-onAuthStateChanged
+
+createUserWithEmailAndPassword
+
 }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+from
 
-// Firebase config
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
 
@@ -137,113 +138,93 @@ apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
 
 authDomain: "nexora-1c66b.firebaseapp.com",
 
+databaseURL: "https://nexora-1c66b-default-rtdb.firebaseio.com",
+
 projectId: "nexora-1c66b",
 
-storageBucket:
-"nexora-1c66b.firebasestorage.app",
+storageBucket: "nexora-1c66b.firebasestorage.app",
 
 messagingSenderId: "964700323381",
 
-appId:
-"1:964700323381:web:5826dd261cb062f401fb7c"
+appId: "1:964700323381:web:5826dd261cb062f401fb7c",
+
+measurementId: "G-HVC60XSN6D"
 
 };
 
+const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase
+const auth = getAuth(app);
 
-const app =
-initializeApp(firebaseConfig);
-
-const auth =
-getAuth(app);
-
-
-// تسجيل حساب
-
-window.register =
-async function () {
+window.login = async function() {
 
 const email =
+
 document.getElementById("email").value;
 
 const password =
-document.getElementById("password").value;
 
-try {
-
-await createUserWithEmailAndPassword(
-auth,
-email,
-password
-);
-
-alert("✅ تم إنشاء الحساب");
-
-window.location.href =
-"dashboard.html";
-
-}
-
-catch (error) {
-
-alert(error.message);
-
-}
-
-};
-
-
-// تسجيل دخول
-
-window.login =
-async function () {
-
-const email =
-document.getElementById("email").value;
-
-const password =
 document.getElementById("password").value;
 
 try {
 
 await signInWithEmailAndPassword(
+
 auth,
+
 email,
+
 password
+
 );
 
-alert("✅ تم تسجيل الدخول");
-
 window.location.href =
+
 "dashboard.html";
 
 }
 
-catch (error) {
+catch {
 
-alert(error.message);
+alert("خطأ في تسجيل الدخول");
 
 }
 
 };
 
+window.register = async function() {
 
-// إذا المستخدم مسجل بالفعل
+const email =
 
-onAuthStateChanged(
+document.getElementById("email").value;
+
+const password =
+
+document.getElementById("password").value;
+
+try {
+
+await createUserWithEmailAndPassword(
+
 auth,
-(user) => {
 
-if (user) {
+email,
 
-window.location.href =
-"dashboard.html";
+password
 
-}
-
-}
 );
+
+alert("تم إنشاء الحساب");
+
+}
+
+catch {
+
+alert("خطأ في التسجيل");
+
+}
+
+};
 
 </script>
 
