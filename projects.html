@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Projects</title>
+
+<link rel="stylesheet"
+href="styles.css">
+
+</head>
+
+<body>
+
+<h1>📂 المشاريع المحفوظة</h1>
+
+<div id="projects">
+
+</div>
+
+<script>
+
+async function loadProjects(){
+
+const res =
+await fetch("/api/getProjects");
+
+const data =
+await res.json();
+
+const div =
+document.getElementById("projects");
+
+div.innerHTML="";
+
+data.projects.forEach(p=>{
+
+div.innerHTML+=`
+
+<div class="project">
+
+<p>${p}</p>
+
+<button
+onclick="deleteProject('${p}')"
+>
+
+🗑 حذف
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+async function deleteProject(p){
+
+await fetch("/api/deleteProject",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+
+project:p
+
+})
+
+});
+
+loadProjects();
+
+}
+
+loadProjects();
+
+</script>
+
+</body>
+
+</html>
