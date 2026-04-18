@@ -7,268 +7,192 @@
 
 <title>Nexora Dashboard</title>
 
-<style>
-
-body {
-
-font-family: Arial;
-
-background:#020617;
-
-color:white;
-
-text-align:center;
-
-padding:40px;
-
-}
-
-textarea {
-
-width:80%;
-
-height:120px;
-
-padding:10px;
-
-border-radius:10px;
-
-border:none;
-
-}
-
-button {
-
-padding:12px;
-
-margin:10px;
-
-border:none;
-
-border-radius:10px;
-
-background:#3b82f6;
-
-color:white;
-
-font-size:16px;
-
-cursor:pointer;
-
-}
-
-button:hover {
-
-background:#2563eb;
-
-}
-
-</style>
+<link rel="stylesheet" href="styles.css">
 
 </head>
 
 <body>
 
-<h1>
-
-🚀 Nexora AI
-
-</h1>
+<h1>🚀 Nexora AI</h1>
 
 <textarea
-
 id="prompt"
-
-placeholder="اكتب فكرة مشروعك هنا..."
-
+placeholder="اكتب فكرة مشروعك..."
 ></textarea>
 
-<br>
+<div class="buttons">
 
 <button onclick="generatePlan()">
 
-📋 توليد خطة مشروع
+📋 خطة مشروع
 
 </button>
 
 <button onclick="generateNames()">
 
-🧠 توليد أسماء
+🧠 أسماء
 
 </button>
 
 <button onclick="generateIdeas()">
 
-💡 توليد أفكار
+💡 أفكار
 
 </button>
 
+<button onclick="generateLogo()">
+
+🎨 Logo
+
+</button>
+
+<button onclick="saveProject()">
+
+💾 حفظ
+
+</button>
+
+<button onclick="goProjects()">
+
+📂 المشاريع
+
+</button>
+
+</div>
+
 <script>
 
-window.generatePlan =
-async function() {
+async function generatePlan(){
 
 const prompt =
 document.getElementById("prompt").value;
 
-if (!prompt) {
-
-alert("اكتب فكرة");
-
-return;
-
-}
-
-try {
-
 const res =
-await fetch("/api/generate", {
+await fetch("/api/generate",{
 
 method:"POST",
 
-headers: {
-
+headers:{
 "Content-Type":"application/json"
-
 },
 
-body: JSON.stringify({
-
-prompt: prompt
-
-})
+body: JSON.stringify({prompt})
 
 });
 
 const data =
 await res.json();
 
-alert(
-
-"📋 خطة المشروع:\n\n" +
-data.result
-
-);
+alert(data.result);
 
 }
 
-catch {
-
-alert("خطأ");
-
-}
-
-};
-
-window.generateNames =
-async function() {
+async function generateNames(){
 
 const prompt =
 document.getElementById("prompt").value;
 
-if (!prompt) {
-
-alert("اكتب فكرة");
-
-return;
-
-}
-
-try {
-
 const res =
-await fetch("/api/names", {
+await fetch("/api/names",{
 
 method:"POST",
 
-headers: {
-
+headers:{
 "Content-Type":"application/json"
-
 },
 
-body: JSON.stringify({
-
-prompt: prompt
-
-})
+body: JSON.stringify({prompt})
 
 });
 
 const data =
 await res.json();
 
-alert(
-
-"🧠 أسماء مقترحة:\n\n" +
-data.names
-
-);
+alert(data.names);
 
 }
 
-catch {
-
-alert("خطأ");
-
-}
-
-};
-
-window.generateIdeas =
-async function() {
+async function generateIdeas(){
 
 const prompt =
 document.getElementById("prompt").value;
 
-if (!prompt) {
-
-alert("اكتب فكرة");
-
-return;
-
-}
-
-try {
-
 const res =
-await fetch("/api/ideas", {
+await fetch("/api/ideas",{
 
 method:"POST",
 
-headers: {
-
+headers:{
 "Content-Type":"application/json"
-
 },
 
-body: JSON.stringify({
-
-prompt: prompt
-
-})
+body: JSON.stringify({prompt})
 
 });
 
 const data =
 await res.json();
 
-alert(
-
-"💡 أفكار:\n\n" +
-data.ideas
-
-);
+alert(data.ideas);
 
 }
 
-catch {
+async function generateLogo(){
 
-alert("خطأ");
+const prompt =
+document.getElementById("prompt").value;
+
+const res =
+await fetch("/api/logo",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({prompt})
+
+});
+
+const data =
+await res.json();
+
+alert(data.logo);
 
 }
 
-};
+async function saveProject(){
+
+const prompt =
+document.getElementById("prompt").value;
+
+await fetch("/api/saveProject",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+
+project: prompt
+
+})
+
+});
+
+alert("تم حفظ المشروع");
+
+}
+
+function goProjects(){
+
+window.location.href =
+"projects.html";
+
+}
 
 </script>
 
