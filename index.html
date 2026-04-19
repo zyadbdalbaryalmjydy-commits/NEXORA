@@ -1,42 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar">
-
 <head>
-
 <meta charset="UTF-8">
-<title>Nexora Login</title>
+<title>Nexora</title>
 
 <link rel="stylesheet" href="styles.css">
-
-</head>
-
-<body>
-
-<div class="login-box">
-
-<h1>🚀 Nexora</h1>
-
-<input id="email" placeholder="Email">
-
-<input
-id="password"
-type="password"
-placeholder="Password"
->
-
-<button onclick="login()">
-
-تسجيل دخول
-
-</button>
-
-<button onclick="register()">
-
-إنشاء حساب
-
-</button>
-
-</div>
 
 <script type="module">
 
@@ -44,28 +12,19 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-
 getAuth,
-signInWithEmailAndPassword,
-createUserWithEmailAndPassword
-
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword
 }
-
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
 
-apiKey: "YOUR_FIREBASE_KEY",
+apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
 
 authDomain: "nexora-1c66b.firebaseapp.com",
 
 projectId: "nexora-1c66b",
-
-storageBucket: "nexora-1c66b.appspot.com",
-
-messagingSenderId: "964700323381",
-
-appId: "1:964700323381:web:5826dd261cb062f401fb7c"
 
 };
 
@@ -74,23 +33,6 @@ initializeApp(firebaseConfig);
 
 const auth =
 getAuth(app);
-
-window.login = async function(){
-
-const email =
-document.getElementById("email").value;
-
-const password =
-document.getElementById("password").value;
-
-await signInWithEmailAndPassword(
-auth,email,password
-);
-
-window.location.href =
-"dashboard.html";
-
-};
 
 window.register = async function(){
 
@@ -101,15 +43,59 @@ const password =
 document.getElementById("password").value;
 
 await createUserWithEmailAndPassword(
-auth,email,password
+auth,
+email,
+password
 );
 
-alert("تم إنشاء الحساب");
+window.location.href="dashboard.html";
 
-};
+}
+
+window.login = async function(){
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+window.location.href="dashboard.html";
+
+}
 
 </script>
 
-</body>
+</head>
 
+<body>
+
+<div class="container">
+
+<h1>Nexora 🚀</h1>
+
+<input id="email"
+placeholder="Email">
+
+<input id="password"
+type="password"
+placeholder="Password">
+
+<button onclick="register()">
+إنشاء حساب
+</button>
+
+<button onclick="login()">
+تسجيل دخول
+</button>
+
+</div>
+
+</body>
 </html>
