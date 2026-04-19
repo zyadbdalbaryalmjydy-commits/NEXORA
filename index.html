@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
+
 <meta charset="UTF-8">
 <title>Nexora</title>
 
@@ -21,18 +22,13 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 const firebaseConfig = {
 
 apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
-
 authDomain: "nexora-1c66b.firebaseapp.com",
-
 projectId: "nexora-1c66b",
 
 };
 
-const app =
-initializeApp(firebaseConfig);
-
-const auth =
-getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 window.register = async function(){
 
