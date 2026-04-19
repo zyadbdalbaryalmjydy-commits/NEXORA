@@ -1,53 +1,36 @@
-export default async function handler(req, res) {
+export default async function handler(req,res){
 
-if (req.method !== "POST") {
-
-return res.status(405).end();
-
-}
-
-try {
+try{
 
 const { prompt } = req.body;
 
 const response =
 await fetch(
-
 "https://api.openai.com/v1/chat/completions",
-
 {
 
-method: "POST",
+method:"POST",
 
-headers: {
-
-"Content-Type": "application/json",
-
+headers:{
 "Authorization":
-"Bearer " + process.env.OPENAI_API_KEY
-
+`Bearer ${process.env.OPENAI_API_KEY}`,
+"Content-Type":"application/json"
 },
 
 body: JSON.stringify({
 
-model: "gpt-4.1-mini",
+model:"gpt-4.1-mini",
 
-messages: [
+messages:[
 
 {
-
-role: "system",
+role:"user",
 
 content:
-"اقترح 5 أسماء احترافية لمشروع بناءً على الفكرة."
+`اعطني 10 أسماء احترافية لمشروع:
+${prompt}
 
-},
-
-{
-
-role: "user",
-
-content: prompt
+الأسماء تكون قصيرة وسهلة.`
 
 }
 
@@ -55,27 +38,25 @@ content: prompt
 
 })
 
-}
-
-);
+});
 
 const data =
 await response.json();
 
 res.status(200).json({
 
-names:
+result:
 data.choices[0].message.content
 
 });
 
 }
 
-catch (error) {
+catch(err){
 
 res.status(500).json({
 
-error: "Server error"
+error:"names failed"
 
 });
 
