@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar">
+
 <head>
 
 <meta charset="UTF-8">
-<title>Dashboard</title>
+<title>Nexora Dashboard</title>
 
 <link rel="stylesheet" href="styles.css">
 
@@ -14,7 +15,8 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
 getAuth,
-onAuthStateChanged
+onAuthStateChanged,
+signOut
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -34,6 +36,8 @@ getAuth(app);
 
 let currentUser = null;
 
+/* التحقق من تسجيل الدخول */
+
 onAuthStateChanged(auth,(user)=>{
 
 if(user){
@@ -51,7 +55,11 @@ window.location.href="index.html";
 
 });
 
-window.generatePlan = async function(){
+
+// توليد خطة مشروع
+
+window.generatePlan =
+async function(){
 
 const prompt =
 document.getElementById("prompt").value;
@@ -73,11 +81,110 @@ const data =
 await res.json();
 
 document.getElementById("result")
-innerText = data.result;
+.innerText = data.result;
 
 }
 
-window.saveProject = async function(){
+
+
+// توليد أسماء مشاريع
+
+window.generateNames =
+async function(){
+
+const prompt =
+document.getElementById("prompt").value;
+
+const res =
+await fetch("/api/names",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({prompt})
+
+});
+
+const data =
+await res.json();
+
+document.getElementById("result")
+.innerText = data.result;
+
+}
+
+
+
+// توليد أفكار مشاريع
+
+window.generateIdeas =
+async function(){
+
+const prompt =
+document.getElementById("prompt").value;
+
+const res =
+await fetch("/api/ideas",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({prompt})
+
+});
+
+const data =
+await res.json();
+
+document.getElementById("result")
+.innerText = data.result;
+
+}
+
+
+
+// توليد لوجو
+
+window.generateLogo =
+async function(){
+
+const prompt =
+document.getElementById("prompt").value;
+
+const res =
+await fetch("/api/logo",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({prompt})
+
+});
+
+const data =
+await res.json();
+
+document.getElementById("result")
+.innerHTML =
+`<img src="${data.image}" width="200">`;
+
+}
+
+
+
+// حفظ مشروع
+
+window.saveProject =
+async function(){
 
 const prompt =
 document.getElementById("prompt").value;
@@ -102,6 +209,10 @@ userId: currentUser.uid
 loadProjects();
 
 }
+
+
+
+// تحميل المشاريع
 
 async function loadProjects(){
 
@@ -128,7 +239,7 @@ div.innerHTML=`
 ${p.project}
 
 <button onclick="deleteProject('${p.project}')">
-❌
+❌ حذف
 </button>
 
 `;
@@ -138,6 +249,10 @@ list.appendChild(div);
 });
 
 }
+
+
+
+// حذف مشروع
 
 window.deleteProject =
 async function(project){
@@ -162,34 +277,84 @@ loadProjects();
 
 }
 
+
+
+// تسجيل خروج
+
+window.logout =
+async function(){
+
+await signOut(auth);
+
+window.location.href="index.html";
+
+}
+
 </script>
 
 </head>
+
+
 
 <body>
 
 <div class="container">
 
-<h2>لوحة التحكم 🚀</h2>
+<h2>🚀 لوحة تحكم Nexora</h2>
 
 <input id="prompt"
-placeholder="اكتب فكرة مشروع...">
+placeholder="اكتب فكرة مشروعك...">
+
+
+
+<!-- أزرار الذكاء -->
 
 <button onclick="generatePlan()">
-توليد خطة
+📋 توليد خطة
 </button>
 
-<button onclick="saveProject()">
-💾 حفظ
+<button onclick="generateNames()">
+🏷️ توليد أسماء
 </button>
+
+<button onclick="generateIdeas()">
+💡 توليد أفكار
+</button>
+
+<button onclick="generateLogo()">
+🎨 توليد لوجو
+</button>
+
+
+
+<!-- حفظ -->
+
+<button onclick="saveProject()">
+💾 حفظ المشروع
+</button>
+
+
+
+<!-- النتيجة -->
 
 <div id="result"></div>
 
-<h3>مشاريعي</h3>
+
+
+<h3>📂 مشاريعي</h3>
 
 <div id="projects"></div>
+
+
+
+<!-- تسجيل خروج -->
+
+<button onclick="logout()">
+🚪 تسجيل خروج
+</button>
 
 </div>
 
 </body>
-</html>
+
+  </html>
