@@ -1,24 +1,35 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { initializeApp }
+from "firebase/app";
 
-const firebaseConfig = {
+import {
+getFirestore,
+collection,
+getDocs
+}
+from "firebase/firestore";
 
-apiKey: process.env.FIREBASE_API_KEY,
-authDomain: "nexora-1c66b.firebaseapp.com",
-projectId: "nexora-1c66b",
+const firebaseConfig={
+
+apiKey:process.env.FIREBASE_API_KEY,
+authDomain:"nexora-1c66b.firebaseapp.com",
+projectId:"nexora-1c66b"
 
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app=
+initializeApp(firebaseConfig);
+
+const db=
+getFirestore(app);
 
 export default async function handler(req,res){
 
-try {
+const snapshot=
+await getDocs(
+collection(db,"projects")
+);
 
-const snapshot = await getDocs(collection(db,"projects"));
-
-const projects = [];
+const projects=[];
 
 snapshot.forEach(doc=>{
 
@@ -26,18 +37,10 @@ projects.push(doc.data());
 
 });
 
-res.status(200).json({ projects });
+res.status(200).json({
 
-}
-
-catch(err){
-
-res.status(500).json({
-
-error:"fetch failed"
+projects
 
 });
-
-}
 
 }
