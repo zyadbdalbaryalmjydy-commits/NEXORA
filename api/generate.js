@@ -2,15 +2,15 @@ export default async function handler(req,res){
 
 const { prompt } = req.body;
 
-const response = await fetch(
-"https://api.openai.com/v1/chat/completions",
-{
+const response =
+await fetch("https://api.openai.com/v1/chat/completions",{
+
 method:"POST",
 
 headers:{
-"Content-Type":"application/json",
 "Authorization":
-"Bearer " + process.env.OPENAI_API_KEY
+`Bearer ${process.env.OPENAI_API_KEY}`,
+"Content-Type":"application/json"
 },
 
 body: JSON.stringify({
@@ -20,21 +20,15 @@ model:"gpt-4.1-mini",
 messages:[
 
 {
-role:"system",
-content:"أنشئ خطة مشروع كاملة تتضمن الفكرة، الجمهور، الربح، التسويق"
-},
-
-{
 role:"user",
-content: prompt
+content:`اكتب خطة مشروع: ${prompt}`
 }
 
 ]
 
 })
 
-}
-);
+});
 
 const data =
 await response.json();
