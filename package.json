@@ -1,0 +1,10 @@
+{
+  "name": "nexora",
+  "version": "1.0.0",
+  "description": "Nexora AI Platform",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "firebase": "^10.12.2"
+  }
+}
