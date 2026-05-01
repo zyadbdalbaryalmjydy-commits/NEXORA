@@ -1,93 +1,26 @@
-export default async function handler(req, res) {
+export default async function handler(req,res){
 
-try {
+const { idea } = JSON.parse(req.body);
 
-if (req.method !== "POST") {
-
-return res.status(405).json({
-error: "Method Not Allowed"
+const response = await fetch("https://api.openai.com/v1/chat/completions",{
+  method:"POST",
+  headers:{
+    "Authorization":`Bearer ${process.env.OPENAI_API_KEY}`,
+    "Content-Type":"application/json"
+  },
+  body:JSON.stringify({
+    model:"gpt-4o-mini",
+    messages:[
+      {role:"system",content:"انت خبير مشاريع"},
+      {role:"user",content:`حول هذه الفكرة إلى مشروع كامل: ${idea}`}
+    ]
+  })
 });
 
-}
-
-const { prompt } = req.body;
-
-if (!prompt) {
-
-return res.status(400).json({
-error: "No prompt provided"
-});
-
-}
-
-const response =
-await fetch(
-"https://api.openai.com/v1/chat/completions",
-{
-
-method: "POST",
-
-headers: {
-
-"Authorization":
-`Bearer ${process.env.OPENAI_API_KEY}`,
-
-"Content-Type": "application/json"
-
-},
-
-body: JSON.stringify({
-
-model: "gpt-4.1-mini",
-
-messages: [
-
-{
-role: "user",
-content:
-`اكتب خطة مشروع احترافية لهذه الفكرة:
-
-${prompt}`
-}
-
-]
-
-})
-
-}
-
-);
-
-const data =
-await response.json();
-
-if (!data.choices) {
-
-return res.status(500).json({
-error: data
-});
-
-}
+const data=await response.json();
 
 res.status(200).json({
-
-result:
-data.choices[0].message.content
-
+  result:data.choices[0].message.content
 });
-
-}
-
-catch (error) {
-
-console.log(error);
-
-res.status(500).json({
-
-error: "Server error"
-
-});
-
-}
 
 }
