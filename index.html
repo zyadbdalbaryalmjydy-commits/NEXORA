@@ -1,97 +1,19 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-
 <meta charset="UTF-8">
 <title>Nexora</title>
-
-<link rel="stylesheet" href="styles.css">
-
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
-authDomain: "nexora-1c66b.firebaseapp.com",
-projectId: "nexora-1c66b",
-
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-window.register = async function(){
-
-const email =
-document.getElementById("email").value;
-
-const password =
-document.getElementById("password").value;
-
-await createUserWithEmailAndPassword(
-auth,
-email,
-password
-);
-
-window.location.href="dashboard.html";
-
-}
-
-window.login = async function(){
-
-const email =
-document.getElementById("email").value;
-
-const password =
-document.getElementById("password").value;
-
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
-
-window.location.href="dashboard.html";
-
-}
-
-</script>
-
+<style>
+body{background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding:60px}
+button{padding:15px 30px;background:#6366f1;color:#fff;border:none;border-radius:10px;font-size:18px}
+</style>
 </head>
-
 <body>
 
-<div class="container">
+<h1>🚀 Nexora</h1>
+<p>حوّل فكرتك إلى مشروع كامل بالذكاء الاصطناعي</p>
 
-<h1>Nexora 🚀</h1>
-
-<input id="email"
-placeholder="Email">
-
-<input id="password"
-type="password"
-placeholder="Password">
-
-<button onclick="register()">
-إنشاء حساب
-</button>
-
-<button onclick="login()">
-تسجيل دخول
-</button>
-
-</div>
+<button onclick="location.href='dashboard.html'">ابدأ الآن</button>
 
 </body>
 </html>
