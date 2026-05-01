@@ -1,18 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getDatabase } from "firebase/database";
+import { getFirestore } from "firebase/firestore";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBYEIxaoS1RbUCxqgj5g5rbpKZe1ddd80o",
+const app = initializeApp({
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "nexora-1c66b.firebaseapp.com",
-  databaseURL: "https://nexora-1c66b-default-rtdb.firebaseio.com",
-  projectId: "nexora-1c66b",
-  storageBucket: "nexora-1c66b.firebasestorage.app",
-  messagingSenderId: "964700323381",
-  appId: "1:964700323381:web:5826dd261cb062f401fb7c"
-};
+  projectId: "nexora-1c66b"
+});
 
-const app = initializeApp(firebaseConfig);
-
-export const auth = getAuth(app);
-export const db = getDatabase(app);
+export const db = getFirestore(app);
