@@ -2,14 +2,14 @@ export default async function handler(req,res){
 
 const { idea, type } = JSON.parse(req.body);
 
-let prompt="";
+let prompt = "أنت خبير مشاريع. اكتب بشكل منظم.\n";
 
 if(type==="ideas"){
-prompt=`اعطني أفكار مشاريع حول: ${idea}`;
+prompt += `اعطني أفكار مشاريع حول: ${idea}`;
 }else if(type==="names"){
-prompt=`اعطني أسماء براند لهذا المشروع: ${idea}`;
+prompt += `اعطني أسماء براند لهذا المشروع: ${idea}`;
 }else{
-prompt=`اكتب خطة مشروع كاملة لهذا: ${idea}`;
+prompt += `اكتب خطة مشروع كاملة لهذا: ${idea}`;
 }
 
 const response=await fetch("https://api.openai.com/v1/chat/completions",{
@@ -21,7 +21,7 @@ headers:{
 body:JSON.stringify({
 model:"gpt-4o-mini",
 messages:[
-{role:"system",content:"انت خبير مشاريع"},
+{role:"system",content:"خبير مشاريع"},
 {role:"user",content:prompt}
 ]
 })
