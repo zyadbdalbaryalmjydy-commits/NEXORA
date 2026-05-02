@@ -1,6 +1,18 @@
 export default async function handler(req,res){
 
-const { idea } = JSON.parse(req.body);
+const { idea, type } = JSON.parse(req.body);
+
+let prompt = "";
+
+if(type==="ideas"){
+  prompt = `اعطني أفكار مشاريع مبتكرة حول: ${idea}`;
+}
+else if(type==="names"){
+  prompt = `اعطني أسماء احترافية لعلامة تجارية لهذا المشروع: ${idea}`;
+}
+else{
+  prompt = `اكتب خطة مشروع كاملة تشمل السوق والجمهور ونموذج الربح لهذا: ${idea}`;
+}
 
 const response = await fetch("https://api.openai.com/v1/chat/completions",{
   method:"POST",
@@ -11,13 +23,13 @@ const response = await fetch("https://api.openai.com/v1/chat/completions",{
   body:JSON.stringify({
     model:"gpt-4o-mini",
     messages:[
-      {role:"system",content:"انت خبير مشاريع"},
-      {role:"user",content:`حول هذه الفكرة إلى مشروع كامل: ${idea}`}
+      {role:"system",content:"انت خبير مشاريع عالمي"},
+      {role:"user",content:prompt}
     ]
   })
 });
 
-const data=await response.json();
+const data = await response.json();
 
 res.status(200).json({
   result:data.choices[0].message.content
