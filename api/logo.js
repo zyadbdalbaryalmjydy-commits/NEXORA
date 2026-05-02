@@ -10,7 +10,7 @@ headers:{
 },
 body:JSON.stringify({
 model:"gpt-image-1",
-prompt:`modern logo for ${idea}`,
+prompt:`modern startup logo for ${idea}, minimal`,
 size:"512x512"
 })
 });
