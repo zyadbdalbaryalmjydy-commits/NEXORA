@@ -2,16 +2,68 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>Nexora AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexora Dashboard</title>
 
 <style>
 body{margin:0;font-family:sans-serif;background:#0f172a;color:white}
-.sidebar{width:220px;height:100vh;background:#020617;position:fixed;padding:20px}
-.sidebar button{width:100%;margin-top:10px;padding:10px;background:#1e293b;border:none;color:white}
-.main{margin-left:240px;padding:20px}
-input{width:100%;padding:12px;border-radius:10px;border:none;margin-top:10px}
-button.action{padding:10px 15px;background:#6366f1;border:none;border-radius:10px;color:white;margin-top:10px}
-.card{background:#1e293b;padding:15px;border-radius:10px;margin-top:15px;white-space:pre-wrap}
+
+.sidebar{
+  width:220px;
+  height:100vh;
+  background:#020617;
+  position:fixed;
+  padding:20px;
+}
+
+.sidebar h2{color:#6366f1}
+
+.sidebar button{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  background:#1e293b;
+  border:none;
+  color:white;
+  cursor:pointer;
+}
+
+.main{
+  margin-left:240px;
+  padding:20px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin-top:10px;
+}
+
+button.action{
+  padding:10px 15px;
+  background:#6366f1;
+  border:none;
+  border-radius:10px;
+  color:white;
+  margin-top:10px;
+  cursor:pointer;
+}
+
+.card{
+  background:#1e293b;
+  padding:15px;
+  border-radius:10px;
+  margin-top:15px;
+  white-space:pre-wrap;
+}
+
+#chat div{
+  margin:5px 0;
+  padding:10px;
+  border-radius:10px;
+}
 </style>
 
 </head>
@@ -20,10 +72,12 @@ button.action{padding:10px 15px;background:#6366f1;border:none;border-radius:10p
 
 <div class="sidebar">
 <h2>🚀 Nexora</h2>
+
 <button onclick="generate('ideas')">💡 أفكار</button>
 <button onclick="generate('names')">🏷️ أسماء</button>
 <button onclick="generate('plan')">📋 خطة</button>
 <button onclick="generateLogo()">🎨 شعار</button>
+<button onclick="generateGemini()">🧠 تحليل متقدم</button>
 <button onclick="loadProjects()">📂 مشاريعي</button>
 </div>
 
@@ -35,9 +89,11 @@ button.action{padding:10px 15px;background:#6366f1;border:none;border-radius:10p
 
 <button class="action" onclick="generate('ideas')">توليد</button>
 
+<div id="loading">⏳ جاري التوليد...</div>
+
 <div id="output" class="card"></div>
 
-<button class="action" onclick="save()">💾 حفظ</button>
+<button class="action" onclick="save()">💾 حفظ المشروع</button>
 
 <hr>
 
@@ -55,68 +111,92 @@ button.action{padding:10px 15px;background:#6366f1;border:none;border-radius:10p
 let lastResult="";
 
 async function generate(type){
-const idea=document.getElementById("idea").value;
+  const idea=document.getElementById("idea").value;
 
-const res=await fetch("/api/generate",{
-method:"POST",
-body:JSON.stringify({idea,type})
-});
+  document.getElementById("loading").style.display="block";
 
-const data=await res.json();
-lastResult=data.result;
+  const res=await fetch("/api/generate",{
+    method:"POST",
+    body:JSON.stringify({idea,type})
+  });
 
-document.getElementById("output").innerText=data.result;
+  const data=await res.json();
+
+  document.getElementById("loading").style.display="none";
+
+  lastResult=data.result;
+
+  document.getElementById("output").innerText=data.result;
 }
 
 async function generateLogo(){
-const idea=document.getElementById("idea").value;
+  const idea=document.getElementById("idea").value;
 
-const res=await fetch("/api/logo",{
-method:"POST",
-body:JSON.stringify({idea})
-});
+  const res=await fetch("/api/logo",{
+    method:"POST",
+    body:JSON.stringify({idea})
+  });
 
-const data=await res.json();
+  const data=await res.json();
 
-document.getElementById("output").innerHTML=`<img src="${data.url}" width="200">`;
+  document.getElementById("output").innerHTML=`<img src="${data.url}" width="200">`;
+}
+
+async function generateGemini(){
+  const idea=document.getElementById("idea").value;
+
+  const res=await fetch("/api/gemini",{
+    method:"POST",
+    body:JSON.stringify({idea})
+  });
+
+  const data=await res.json();
+
+  document.getElementById("output").innerText=data.result;
 }
 
 async function save(){
-await fetch("/api/saveProject",{
-method:"POST",
-body:JSON.stringify({content:lastResult})
-});
-alert("تم الحفظ");
+  await fetch("/api/saveProject",{
+    method:"POST",
+    body:JSON.stringify({content:lastResult})
+  });
+
+  alert("تم الحفظ");
 }
 
 async function loadProjects(){
-const res=await fetch("/api/getProjects");
-const data=await res.json();
-document.getElementById("output").innerText=
-JSON.stringify(data.projects,null,2);
+  const res=await fetch("/api/getProjects");
+  const data=await res.json();
+
+  let html="";
+  data.projects.forEach(p=>{
+    html+=`<div class="card">${p.content}</div>`;
+  });
+
+  document.getElementById("output").innerHTML=html;
 }
 
 async function sendMessage(){
 
-const input=document.getElementById("chatInput");
-const msg=input.value;
+  const input=document.getElementById("chatInput");
+  const msg=input.value;
 
-if(!msg)return;
+  if(!msg)return;
 
-const chat=document.getElementById("chat");
+  const chat=document.getElementById("chat");
 
-chat.innerHTML+=`<div style="background:#334155;padding:10px;border-radius:10px;margin:5px">أنت: ${msg}</div>`;
+  chat.innerHTML+=`<div style="background:#334155">أنت: ${msg}</div>`;
 
-input.value="";
+  input.value="";
 
-const res=await fetch("/api/chat",{
-method:"POST",
-body:JSON.stringify({message:msg})
-});
+  const res=await fetch("/api/chat",{
+    method:"POST",
+    body:JSON.stringify({message:msg})
+  });
 
-const data=await res.json();
+  const data=await res.json();
 
-chat.innerHTML+=`<div style="background:#1e293b;padding:10px;border-radius:10px;margin:5px">Nexora: ${data.reply}</div>`;
+  chat.innerHTML+=`<div style="background:#1e293b">Nexora: ${data.reply}</div>`;
 }
 
 </script>
