@@ -1,79 +1,19 @@
 import { initializeApp } from "firebase/app";
+import { getFirestore, addDoc, collection } from "firebase/firestore";
 
-import {
-getFirestore,
-collection,
-addDoc
-} from "firebase/firestore";
-
-let app;
-
-if (!global.firebaseApp) {
-
-global.firebaseApp =
-initializeApp({
-
+const app = initializeApp({
 apiKey: process.env.FIREBASE_API_KEY,
-
-authDomain:
-"nexora-1c66b.firebaseapp.com",
-
-projectId:
-"nexora-1c66b"
-
+authDomain:"nexora-1c66b.firebaseapp.com",
+projectId:"nexora-1c66b"
 });
 
-}
-
-app = global.firebaseApp;
-
-const db =
-getFirestore(app);
+const db = getFirestore(app);
 
 export default async function handler(req,res){
 
-try{
+const { content } = JSON.parse(req.body);
 
-if (req.method !== "POST") {
+await addDoc(collection(db,"projects"),{content});
 
-return res.status(405).json({
-error:"Method not allowed"
-});
-
-}
-
-const { project, userId } =
-req.body;
-
-await addDoc(
-collection(db,"projects"),
-{
-
-project,
-userId,
-createdAt:new Date()
-
-}
-);
-
-res.status(200).json({
-
-success:true
-
-});
-
-}
-
-catch(error){
-
-console.log(error);
-
-res.status(500).json({
-
-error:"Save failed"
-
-});
-
-}
-
+res.status(200).json({ok:true});
 }
