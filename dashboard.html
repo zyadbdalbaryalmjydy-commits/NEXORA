@@ -2,51 +2,157 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard</title>
+<title>Nexora AI</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  background:#0f172a;
+  color:white;
+}
+
+.sidebar {
+  width:220px;
+  height:100vh;
+  background:#020617;
+  position:fixed;
+  padding:20px;
+}
+
+.sidebar h2 {
+  color:#6366f1;
+}
+
+.sidebar button {
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  background:#1e293b;
+  border:none;
+  color:white;
+  cursor:pointer;
+}
+
+.main {
+  margin-left:240px;
+  padding:20px;
+}
+
+input {
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+button.action {
+  padding:12px 20px;
+  margin:5px;
+  background:#6366f1;
+  border:none;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
+}
+
+.card {
+  background:#1e293b;
+  padding:20px;
+  border-radius:15px;
+  margin-top:20px;
+  white-space:pre-wrap;
+}
+</style>
+
 </head>
+
 <body>
 
-<h2>Nexora Dashboard</h2>
+<div class="sidebar">
+  <h2>🚀 Nexora</h2>
 
-<input id="idea" placeholder="اكتب فكرة مشروع">
-<button onclick="generate()">توليد</button>
+  <button onclick="show('ideas')">💡 أفكار</button>
+  <button onclick="show('names')">🏷️ أسماء</button>
+  <button onclick="show('plan')">📋 خطة</button>
+  <button onclick="show('logo')">🎨 شعار</button>
+  <button onclick="loadProjects()">📂 مشاريعي</button>
+</div>
 
-<pre id="result"></pre>
+<div class="main">
 
-<button onclick="save()">💾 حفظ</button>
-<button onclick="load()">📂 مشاريعي</button>
+<h1>لوحة Nexora الذكية</h1>
+
+<input id="idea" placeholder="اكتب فكرة مشروعك...">
+
+<div>
+  <button class="action" onclick="generate('ideas')">💡 توليد أفكار</button>
+  <button class="action" onclick="generate('names')">🏷️ أسماء</button>
+  <button class="action" onclick="generate('plan')">📋 خطة</button>
+  <button class="action" onclick="generateLogo()">🎨 شعار</button>
+</div>
+
+<div id="output" class="card"></div>
+
+<button class="action" onclick="save()">💾 حفظ المشروع</button>
+
+</div>
 
 <script>
-async function generate(){
-  let idea=document.getElementById("idea").value;
 
-  let res=await fetch("/api/generate",{
+let lastResult = "";
+
+function show(type){
+  generate(type);
+}
+
+async function generate(type){
+  const idea = document.getElementById("idea").value;
+
+  const res = await fetch("/api/generate",{
+    method:"POST",
+    body:JSON.stringify({idea, type})
+  });
+
+  const data = await res.json();
+  lastResult = data.result;
+
+  document.getElementById("output").innerText = data.result;
+}
+
+async function generateLogo(){
+  const idea = document.getElementById("idea").value;
+
+  const res = await fetch("/api/logo",{
     method:"POST",
     body:JSON.stringify({idea})
   });
 
-  let data=await res.json();
-  document.getElementById("result").innerText=data.result;
+  const data = await res.json();
+
+  document.getElementById("output").innerHTML =
+    `<img src="${data.url}" width="200">`;
 }
 
 async function save(){
-  let content=document.getElementById("result").innerText;
-
   await fetch("/api/saveProject",{
     method:"POST",
-    body:JSON.stringify({content})
+    body:JSON.stringify({content:lastResult})
   });
 
   alert("تم الحفظ");
 }
 
-async function load(){
-  let res=await fetch("/api/getProjects");
-  let data=await res.json();
-  document.getElementById("result").innerText=
+async function loadProjects(){
+  const res = await fetch("/api/getProjects");
+  const data = await res.json();
+
+  document.getElementById("output").innerText =
     JSON.stringify(data.projects,null,2);
 }
+
 </script>
 
 </body>
-</html>
+  </html>
