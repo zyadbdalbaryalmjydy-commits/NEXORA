@@ -1,204 +1,180 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexora Dashboard</title>
+  <meta charset="UTF-8" />
+  <title>Nexora Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-body{margin:0;font-family:sans-serif;background:#0f172a;color:white}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+    }
 
-.sidebar{
-  width:220px;
-  height:100vh;
-  background:#020617;
-  position:fixed;
-  padding:20px;
-}
+    header {
+      padding: 15px;
+      background: #020617;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-.sidebar h2{color:#6366f1}
+    button {
+      background: #6366f1;
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 5px;
+    }
 
-.sidebar button{
-  width:100%;
-  margin-top:10px;
-  padding:10px;
-  background:#1e293b;
-  border:none;
-  color:white;
-  cursor:pointer;
-}
+    .container {
+      padding: 20px;
+    }
 
-.main{
-  margin-left:240px;
-  padding:20px;
-}
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+    }
 
-input{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  margin-top:10px;
-}
-
-button.action{
-  padding:10px 15px;
-  background:#6366f1;
-  border:none;
-  border-radius:10px;
-  color:white;
-  margin-top:10px;
-  cursor:pointer;
-}
-
-.card{
-  background:#1e293b;
-  padding:15px;
-  border-radius:10px;
-  margin-top:15px;
-  white-space:pre-wrap;
-}
-
-#chat div{
-  margin:5px 0;
-  padding:10px;
-  border-radius:10px;
-}
-</style>
-
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-<h2>🚀 Nexora</h2>
+<header>
+  <h2>🚀 Nexora Dashboard</h2>
+  <button onclick="logout()">تسجيل خروج</button>
+</header>
 
-<button onclick="generate('ideas')">💡 أفكار</button>
-<button onclick="generate('names')">🏷️ أسماء</button>
-<button onclick="generate('plan')">📋 خطة</button>
-<button onclick="generateLogo()">🎨 شعار</button>
-<button onclick="generateGemini()">🧠 تحليل متقدم</button>
-<button onclick="loadProjects()">📂 مشاريعي</button>
-</div>
+<div class="container">
 
-<div class="main">
+  <h3>💡 اكتب فكرتك</h3>
+  <textarea id="ideaInput" placeholder="مثال: تطبيق توصيل طعام"></textarea>
 
-<h2>لوحة Nexora</h2>
+  <div>
+    <button onclick="generate()">⚡ توليد مشروع</button>
+    <button onclick="analyzeIdea()">🧠 تحليل متقدم (Gemini)</button>
+    <button onclick="saveProject()">💾 حفظ المشروع</button>
+    <button onclick="loadProjects()">📂 مشاريعي</button>
+  </div>
 
-<input id="idea" placeholder="اكتب فكرة مشروع...">
+  <div id="result" class="card">النتيجة تظهر هنا...</div>
 
-<button class="action" onclick="generate('ideas')">توليد</button>
-
-<div id="loading">⏳ جاري التوليد...</div>
-
-<div id="output" class="card"></div>
-
-<button class="action" onclick="save()">💾 حفظ المشروع</button>
-
-<hr>
-
-<h3>💬 شات Nexora</h3>
-
-<div id="chat"></div>
-
-<input id="chatInput" placeholder="اسأل Nexora...">
-<button class="action" onclick="sendMessage()">إرسال</button>
+  <div id="projects" class="card"></div>
 
 </div>
 
 <script>
+let currentResult = "";
 
-let lastResult="";
+// 🔥 توليد المشروع (ChatGPT)
+async function generate() {
+  const idea = document.getElementById("ideaInput").value;
 
-async function generate(type){
-  const idea=document.getElementById("idea").value;
+  if (!idea) {
+    alert("اكتب فكرة أول");
+    return;
+  }
 
-  document.getElementById("loading").style.display="block";
+  document.getElementById("result").innerText = "⏳ جاري التوليد...";
 
-  const res=await fetch("/api/generate",{
-    method:"POST",
-    body:JSON.stringify({idea,type})
+  const res = await fetch("/api/generate", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ idea })
   });
 
-  const data=await res.json();
+  const data = await res.json();
 
-  document.getElementById("loading").style.display="none";
+  currentResult = data.result || "❌ فشل التوليد";
 
-  lastResult=data.result;
-
-  document.getElementById("output").innerText=data.result;
+  document.getElementById("result").innerText = currentResult;
 }
 
-async function generateLogo(){
-  const idea=document.getElementById("idea").value;
+// 🧠 تحليل Gemini
+async function analyzeIdea() {
+  const idea = document.getElementById("ideaInput").value;
 
-  const res=await fetch("/api/logo",{
-    method:"POST",
-    body:JSON.stringify({idea})
+  if (!idea) {
+    alert("اكتب فكرة أول");
+    return;
+  }
+
+  document.getElementById("result").innerText = "🧠 جاري التحليل...";
+
+  const res = await fetch("/api/gemini", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      prompt: `حلل هذه الفكرة وطورها بشكل احترافي:\n${idea}`
+    })
   });
 
-  const data=await res.json();
+  const data = await res.json();
 
-  document.getElementById("output").innerHTML=`<img src="${data.url}" width="200">`;
+  currentResult = data.result || "❌ فشل التحليل";
+
+  document.getElementById("result").innerText = currentResult;
 }
 
-async function generateGemini(){
-  const idea=document.getElementById("idea").value;
+// 💾 حفظ المشروع
+async function saveProject() {
+  if (!currentResult) {
+    alert("ما في نتيجة تحفظها");
+    return;
+  }
 
-  const res=await fetch("/api/gemini",{
-    method:"POST",
-    body:JSON.stringify({idea})
+  await fetch("/api/saveProject", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      content: currentResult
+    })
   });
 
-  const data=await res.json();
-
-  document.getElementById("output").innerText=data.result;
+  alert("✅ تم الحفظ");
 }
 
-async function save(){
-  await fetch("/api/saveProject",{
-    method:"POST",
-    body:JSON.stringify({content:lastResult})
+// 📂 تحميل المشاريع
+async function loadProjects() {
+  const res = await fetch("/api/getProjects");
+  const data = await res.json();
+
+  const container = document.getElementById("projects");
+
+  container.innerHTML = "";
+
+  if (!data.projects || data.projects.length === 0) {
+    container.innerHTML = "❌ لا توجد مشاريع";
+    return;
+  }
+
+  data.projects.forEach((p, i) => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerText = p.content || JSON.stringify(p);
+    container.appendChild(div);
   });
-
-  alert("تم الحفظ");
 }
 
-async function loadProjects(){
-  const res=await fetch("/api/getProjects");
-  const data=await res.json();
-
-  let html="";
-  data.projects.forEach(p=>{
-    html+=`<div class="card">${p.content}</div>`;
-  });
-
-  document.getElementById("output").innerHTML=html;
+// 🚪 تسجيل خروج
+function logout() {
+  localStorage.clear();
+  window.location.href = "/";
 }
-
-async function sendMessage(){
-
-  const input=document.getElementById("chatInput");
-  const msg=input.value;
-
-  if(!msg)return;
-
-  const chat=document.getElementById("chat");
-
-  chat.innerHTML+=`<div style="background:#334155">أنت: ${msg}</div>`;
-
-  input.value="";
-
-  const res=await fetch("/api/chat",{
-    method:"POST",
-    body:JSON.stringify({message:msg})
-  });
-
-  const data=await res.json();
-
-  chat.innerHTML+=`<div style="background:#1e293b">Nexora: ${data.reply}</div>`;
-}
-
 </script>
 
 </body>
