@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Nexora Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
@@ -14,19 +14,23 @@
     }
 
     header {
-      padding: 15px;
       background: #020617;
+      padding: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    h2 {
+      margin: 0;
     }
 
     button {
       background: #6366f1;
       border: none;
       padding: 10px 15px;
-      color: white;
       border-radius: 8px;
+      color: white;
       cursor: pointer;
       margin: 5px;
     }
@@ -35,12 +39,13 @@
       padding: 20px;
     }
 
-    input, textarea {
+    textarea {
       width: 100%;
+      height: 120px;
       padding: 10px;
-      margin-top: 10px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: none;
+      margin-top: 10px;
     }
 
     .card {
@@ -48,6 +53,11 @@
       padding: 15px;
       margin-top: 15px;
       border-radius: 10px;
+      white-space: pre-wrap;
+    }
+
+    .loading {
+      opacity: 0.6;
     }
   </style>
 </head>
@@ -65,13 +75,12 @@
   <textarea id="ideaInput" placeholder="مثال: تطبيق توصيل طعام"></textarea>
 
   <div>
-    <button onclick="generate()">⚡ توليد مشروع</button>
-    <button onclick="analyzeIdea()">🧠 تحليل متقدم (Gemini)</button>
+    <button onclick="generate()">🚀 توليد ذكي كامل</button>
     <button onclick="saveProject()">💾 حفظ المشروع</button>
-    <button onclick="loadProjects()">📂 مشاريعي</button>
+    <button onclick="loadProjects()">📂 عرض مشاريعي</button>
   </div>
 
-  <div id="result" class="card">النتيجة تظهر هنا...</div>
+  <div id="result" class="card">النتيجة ستظهر هنا...</div>
 
   <div id="projects" class="card"></div>
 
@@ -80,7 +89,7 @@
 <script>
 let currentResult = "";
 
-// 🔥 توليد المشروع (ChatGPT)
+// 🚀 توليد ذكي (ChatGPT + Gemini)
 async function generate() {
   const idea = document.getElementById("ideaInput").value;
 
@@ -89,85 +98,83 @@ async function generate() {
     return;
   }
 
-  document.getElementById("result").innerText = "⏳ جاري التوليد...";
+  const resultBox = document.getElementById("result");
+  resultBox.innerText = "⏳ جاري توليد المشروع...";
+  resultBox.classList.add("loading");
 
-  const res = await fetch("/api/generate", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ idea })
-  });
+  try {
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ idea })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  currentResult = data.result || "❌ فشل التوليد";
+    currentResult = data.result || "❌ فشل التوليد";
 
-  document.getElementById("result").innerText = currentResult;
-}
+    resultBox.innerText = currentResult;
+    resultBox.classList.remove("loading");
 
-// 🧠 تحليل Gemini
-async function analyzeIdea() {
-  const idea = document.getElementById("ideaInput").value;
-
-  if (!idea) {
-    alert("اكتب فكرة أول");
-    return;
+  } catch (err) {
+    resultBox.innerText = "❌ خطأ في الاتصال";
+    resultBox.classList.remove("loading");
   }
-
-  document.getElementById("result").innerText = "🧠 جاري التحليل...";
-
-  const res = await fetch("/api/gemini", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      prompt: `حلل هذه الفكرة وطورها بشكل احترافي:\n${idea}`
-    })
-  });
-
-  const data = await res.json();
-
-  currentResult = data.result || "❌ فشل التحليل";
-
-  document.getElementById("result").innerText = currentResult;
 }
 
 // 💾 حفظ المشروع
 async function saveProject() {
   if (!currentResult) {
-    alert("ما في نتيجة تحفظها");
+    alert("لا يوجد محتوى للحفظ");
     return;
   }
 
-  await fetch("/api/saveProject", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      content: currentResult
-    })
-  });
+  try {
+    await fetch("/api/saveProject", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content: currentResult
+      })
+    });
 
-  alert("✅ تم الحفظ");
+    alert("✅ تم حفظ المشروع");
+
+  } catch {
+    alert("❌ فشل الحفظ");
+  }
 }
 
 // 📂 تحميل المشاريع
 async function loadProjects() {
-  const res = await fetch("/api/getProjects");
-  const data = await res.json();
-
   const container = document.getElementById("projects");
+  container.innerHTML = "⏳ جاري التحميل...";
 
-  container.innerHTML = "";
+  try {
+    const res = await fetch("/api/getProjects");
+    const data = await res.json();
 
-  if (!data.projects || data.projects.length === 0) {
-    container.innerHTML = "❌ لا توجد مشاريع";
-    return;
+    container.innerHTML = "";
+
+    if (!data.projects || data.projects.length === 0) {
+      container.innerHTML = "❌ لا توجد مشاريع";
+      return;
+    }
+
+    data.projects.forEach((p) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerText = p.content || JSON.stringify(p);
+      container.appendChild(div);
+    });
+
+  } catch {
+    container.innerHTML = "❌ فشل تحميل المشاريع";
   }
-
-  data.projects.forEach((p, i) => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerText = p.content || JSON.stringify(p);
-    container.appendChild(div);
-  });
 }
 
 // 🚪 تسجيل خروج
