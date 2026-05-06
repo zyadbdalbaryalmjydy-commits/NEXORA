@@ -9,16 +9,17 @@
     body {
       margin: 0;
       font-family: Arial;
-      background: #0f172a;
+      background: linear-gradient(135deg,#020617,#0f172a);
       color: white;
     }
 
     header {
+      padding: 15px 20px;
       background: #020617;
-      padding: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid #1e293b;
     }
 
     h2 {
@@ -33,18 +34,30 @@
       color: white;
       cursor: pointer;
       margin: 5px;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.85;
     }
 
     .container {
       padding: 20px;
+      max-width: 900px;
+      margin: auto;
     }
 
     textarea {
       width: 100%;
       height: 120px;
-      padding: 10px;
+      padding: 12px;
       border-radius: 10px;
       border: none;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .actions {
       margin-top: 10px;
     }
 
@@ -59,13 +72,17 @@
     .loading {
       opacity: 0.6;
     }
+
+    img {
+      margin-top: 10px;
+    }
   </style>
 </head>
 
 <body>
 
 <header>
-  <h2>🚀 Nexora Dashboard</h2>
+  <h2>🚀 Nexora</h2>
   <button onclick="logout()">تسجيل خروج</button>
 </header>
 
@@ -74,14 +91,14 @@
   <h3>💡 اكتب فكرتك</h3>
   <textarea id="ideaInput" placeholder="مثال: تطبيق توصيل طعام"></textarea>
 
-  <div>
-    <button onclick="generate()">🚀 توليد ذكي كامل</button>
-    <button onclick="saveProject()">💾 حفظ المشروع</button>
-    <button onclick="loadProjects()">📂 عرض مشاريعي</button>
+  <div class="actions">
+    <button onclick="generate()">🚀 توليد ذكي</button>
+    <button onclick="generateLogo()">🎨 توليد لوجو</button>
+    <button onclick="saveProject()">💾 حفظ</button>
+    <button onclick="loadProjects()">📂 مشاريعي</button>
   </div>
 
   <div id="result" class="card">النتيجة ستظهر هنا...</div>
-
   <div id="projects" class="card"></div>
 
 </div>
@@ -89,7 +106,7 @@
 <script>
 let currentResult = "";
 
-// 🚀 توليد ذكي (ChatGPT + Gemini)
+// 🚀 Hybrid AI
 async function generate() {
   const idea = document.getElementById("ideaInput").value;
 
@@ -98,9 +115,9 @@ async function generate() {
     return;
   }
 
-  const resultBox = document.getElementById("result");
-  resultBox.innerText = "⏳ جاري توليد المشروع...";
-  resultBox.classList.add("loading");
+  const box = document.getElementById("result");
+  box.innerText = "⏳ جاري التوليد...";
+  box.classList.add("loading");
 
   try {
     const res = await fetch("/api/generate", {
@@ -113,71 +130,84 @@ async function generate() {
 
     const data = await res.json();
 
-    currentResult = data.result || "❌ فشل التوليد";
+    currentResult = data.result || "❌ فشل";
 
-    resultBox.innerText = currentResult;
-    resultBox.classList.remove("loading");
+    box.innerText = currentResult;
+    box.classList.remove("loading");
 
-  } catch (err) {
-    resultBox.innerText = "❌ خطأ في الاتصال";
-    resultBox.classList.remove("loading");
+  } catch {
+    box.innerText = "❌ خطأ اتصال";
+    box.classList.remove("loading");
   }
 }
 
-// 💾 حفظ المشروع
-async function saveProject() {
-  if (!currentResult) {
-    alert("لا يوجد محتوى للحفظ");
+// 🎨 Logo
+async function generateLogo() {
+  const idea = document.getElementById("ideaInput").value;
+
+  if (!idea) {
+    alert("اكتب اسم المشروع");
     return;
   }
 
-  try {
-    await fetch("/api/saveProject", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        content: currentResult
-      })
-    });
+  const res = await fetch("/api/logo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ name: idea })
+  });
 
-    alert("✅ تم حفظ المشروع");
+  const data = await res.json();
 
-  } catch {
-    alert("❌ فشل الحفظ");
-  }
+  document.getElementById("result").innerHTML =
+    `<img src="${data.logo}" width="200" style="border-radius:10px;">`;
 }
 
-// 📂 تحميل المشاريع
+// 💾 Save
+async function saveProject() {
+  if (!currentResult) {
+    alert("لا يوجد شيء للحفظ");
+    return;
+  }
+
+  await fetch("/api/saveProject", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      content: currentResult
+    })
+  });
+
+  alert("✅ تم الحفظ");
+}
+
+// 📂 Load
 async function loadProjects() {
   const container = document.getElementById("projects");
-  container.innerHTML = "⏳ جاري التحميل...";
+  container.innerHTML = "⏳...";
 
-  try {
-    const res = await fetch("/api/getProjects");
-    const data = await res.json();
+  const res = await fetch("/api/getProjects");
+  const data = await res.json();
 
-    container.innerHTML = "";
+  container.innerHTML = "";
 
-    if (!data.projects || data.projects.length === 0) {
-      container.innerHTML = "❌ لا توجد مشاريع";
-      return;
-    }
-
-    data.projects.forEach((p) => {
-      const div = document.createElement("div");
-      div.className = "card";
-      div.innerText = p.content || JSON.stringify(p);
-      container.appendChild(div);
-    });
-
-  } catch {
-    container.innerHTML = "❌ فشل تحميل المشاريع";
+  if (!data.projects || data.projects.length === 0) {
+    container.innerHTML = "❌ لا يوجد مشاريع";
+    return;
   }
+
+  data.projects.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerText = p.content;
+    container.appendChild(div);
+  });
 }
 
-// 🚪 تسجيل خروج
+// 🚪 Logout
 function logout() {
   localStorage.clear();
   window.location.href = "/";
